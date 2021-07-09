@@ -1,0 +1,191 @@
+implement both conditions
+increase shadow height requirement
+
+diff between hammer / hanging man, shooting star / inverted hammer 
+
+check next candle open is in which direction..
+
+do i need to reduce the candle body
+
+
+
+so far 44 win, 37 loss
+
+lets try after increasing body = shadow / 3
+tried it and got 25 win , 21 loss
+
+
+lets check last five candle also last candle color and keeep ratio to 2
+
+HAMMER | INVERTED HAMMER | SHOOTING STAR | HANGING MAN
+09-June-2021
+    After implementing separate function and added candle color constrain..
+
+    No of Trades: 64 | No of Win: 36 | No of Loss: 28 | Win Percentage: 56.25
+
+10-June-2021
+    After checking last candle is shaven and last candle status
+    492. No of Trades: 44| No of Win: 21| No of Loss: 23 | Win Percentage: 47.72727272727273
+
+    increasing shaven candle body height constraint to more than 0.0001
+    492. No of Trades: 54| No of Win: 30| No of Loss: 24 | Win Percentage: 55.55555555555556
+
+    Engulfing pattern
+    222. No of Trades: 2| No of Win: 1| No of Loss: 1 | Win Percentage: 50.0
+
+    tested with 200 rows
+    1897. No of Trades: 9| No of Win: 4| No of Loss: 5 | Win Percentage: 44.44444444444444
+
+    lets remove trend constraint
+    222. No of Trades: 2| No of Win: 1| No of Loss: 1 | Win Percentage: 50.0
+    1897. No of Trades: 10| No of Win: 5| No of Loss: 5 | Win Percentage: 50.0
+
+    1 year data
+    260. No of Trades: 86| No of Win: 39| No of Loss: 47 | Win Percentage: 45.348837209302324
+
+
+11-June-2021
+    Dark Cloud with trend checking and penetrated more than half of n-1 candle
+    49856. No of Trades: 161| No of Win: 80| No of Loss: 81 | Win Percentage: 49.68944099378882
+
+    Piercing Pattern with trend cheaking and penetrated more than one third off n-1 candle
+    48196. No of Trades: 143| No of Win: 73| No of Loss: 70 | Win Percentage: 51.048951048951054
+
+    
+12-June-2021
+    Morning star with trend and 3 candle status constraint
+    49982. No of Trades: 2760| No of Win: 1305| No of Loss: 1455 | Win Percentage: 47.28260869565217
+
+    Morning star with trend and 3 candle status constraint and candle shaven / body volume
+    49944. No of Trades: 426| No of Win: 210| No of Loss: 216 | Win Percentage: 49.29577464788733
+
+    After adding morning star open should be lesser than nth candle close
+    49944. No of Trades: 322| No of Win: 161| No of Loss: 161 | Win Percentage: 50.0
+
+    After adding contraint morning star candle should open below nth candle's close
+    49554. No of Trades: 125| No of Win: 69| No of Loss: 56 | Win Percentage: 55.2
+
+    Adding third candle closes within first candle and third candle starts above second candle
+    47469. No of Trades: 42| No of Win: 22| No of Loss: 20 | Win Percentage: 52.38095238095239
+
+    Adding more accurate candle positions
+    49554. No of Trades: 94| No of Win: 53| No of Loss: 41 | Win Percentage: 56.38297872340425
+
+    Adding more accurate candle positions
+    49554. No of Trades: 58| No of Win: 34| No of Loss: 24 | Win Percentage: 58.620689655172406
+    49554. No of Trades: 53| No of Win: 31| No of Loss: 22 | Win Percentage: 58.490566037735846
+
+13-June-2021
+
+    Morning Dojo ( strict dojo )
+    48440. No of Trades: 5| No of Win: 3| No of Loss: 2 | Win Percentage: 60.0 ( inc. duplicates )
+    48440. No of Trades: 5| No of Win: 3| No of Loss: 2 | Win Percentage: 60.0 ( inc. duplicates )
+
+    Evening Dojo
+    not found yet ( tried exactly opposite to morning star )
+
+
+    Harami 
+    49554. No of Trades: 53| No of Win: 31| No of Loss: 22 | Win Percentage: 58.490566037735846 ( inc. duplicates )
+
+    Harami star without hammer, hanging man, shooting star, inverted hammer
+    48741. No of Trades: 32| No of Win: 13| No of Loss: 19 | Win Percentage: 40.625 ( inc. duplicates )
+
+    Harami with hammer, hanging man, shooting star, inverted hammer
+    49661. No of Trades: 116| No of Win: 53| No of Loss: 63 | Win Percentage: 45.689655172413794 ( inc. duplicates )
+
+    Bullish Harami also with trend and with hammer, hanging man, shooting star, inverted hammer
+    49661. No of Trades: 94| No of Win: 44| No of Loss: 50 | Win Percentage: 46.808510638297875 ( inc. duplicates )
+
+    49661. No of Trades: 60| No of Win: 28| No of Loss: 32 | Win Percentage: 46.666666666666664
+
+    Bearish Harami also with trend and with hammer, hanging man, shooting star, inverted hammer
+    49625. No of Trades: 74| No of Win: 42| No of Loss: 32 | Win Percentage: 56.75675675675676
+
+    Bullish Harami Cross
+    47404. No of Trades: 16| No of Win: 9| No of Loss: 7 | Win Percentage: 56.25
+
+    Bearish Harami Cross
+    43491. No of Trades: 21| No of Win: 14| No of Loss: 7 | Win Percentage: 66.66666666666666
+
+    Bearish Tweezer Top without n-1 body volume ( without candle color )
+    49747. No of Trades: 377| No of Win: 188| No of Loss: 189 | Win Percentage: 49.86737400530504
+
+    Bearish Tweezer Top with n-1 body volume greater than 0.00015 volume ( without candle color )
+    48129. No of Trades: 165| No of Win: 78| No of Loss: 87 | Win Percentage: 47.27272727272727
+
+
+    Bearish Tweezer Top ( without candle color )
+    49811. No of Trades: 396| No of Win: 208| No of Loss: 188 | Win Percentage: 52.52525252525253
+
+    Bullish Tweezer Top with candle color and not repeating
+    48988. No of Trades: 177| No of Win: 85| No of Loss: 92 | Win Percentage: 48.0225988700565
+    48988. No of Trades: 177| No of Win: 85| No of Loss: 92 | Win Percentage: 48.0225988700565
+
+    Bearish Tweezer Bottom with candle color and not repeating
+    49811. No of Trades: 216| No of Win: 110| No of Loss: 106 | Win Percentage: 50.92592592592593
+
+    Three black crows only checking shaven_shadows and bearish candles
+    49908. No of Trades: 178| No of Win: 86| No of Loss: 92 | Win Percentage: 48.31460674157304
+
+    also included n-3 should be bullish
+    49557. No of Trades: 67| No of Win: 24| No of Loss: 43 | Win Percentage: 35.82089552238806
+
+    also included trend must be uptrend
+    39655. No of Trades: 5| No of Win: 2| No of Loss: 3 | Win Percentage: 40.0
+
+    Three White Soldiers with trend, shaaven_shadows, after bearish candle
+    44253. No of Trades: 8| No of Win: 4| No of Loss: 4 | Win Percentage: 50.0
+
+    Bearish CounterAttack
+    49578. No of Trades: 42| No of Win: 18| No of Loss: 24 | Win Percentage: 42.857142857142854
+
+    49990. No of Trades: 896| No of Win: 538| No of Loss: 358 | Win Percentage: 60.04464285714286
+
+    49987. No of Trades: 170| No of Win: 99| No of Loss: 71 | Win Percentage: 58.235294117647065
+
+    without n-1 candle dojo removed duplicates
+    49840. No of Trades: 610| No of Win: 336| No of Loss: 274 | Win Percentage: 55.08196721311476
+
+    Bullish CounterAttack
+    equal or greater close of two candles
+    49788. No of Trades: 930| No of Win: 410| No of Loss: 520 | Win Percentage: 44.086021505376344
+
+    greater of two candles
+    49397. No of Trades: 217| No of Win: 94| No of Loss: 123 | Win Percentage: 43.31797235023041
+
+    without n-1 candle dojo removed duplicates
+    49788. No of Trades: 564| No of Win: 263| No of Loss: 301 | Win Percentage: 46.63120567375886
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

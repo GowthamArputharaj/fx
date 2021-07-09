@@ -1,0 +1,36 @@
+Name     : panda panda
+Type     : Forex Netting USD
+Server   : MetaQuotes-Demo
+Login    : 48410080
+Password : yhyji5kh
+Investor : skhrtr4e
+
+
+## R O B O F O R E X
+Account number:	67021181
+RoboForex Ltd,
+licence No. 000138/210
+Currency:	USD
+Account Type:	MT5 Demo ECN
+Leverage:	1:500 [?]
+Hedge account:	Yes [?]
+Rebates:	0.00 [?]
+Phone verified:	No [?]
+Verification:	  [?]
+VIP program level:	No [?]
+Balance: 
+100,000.00 USD
+
+
+## Account information:
+Account number	67021181	 
+Account password	q14d6352C	
+Account type	MT5 Demo ECN	 
+Account currency	USD
+Leverage	1 : 500
+
+
+
+
+
+

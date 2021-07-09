@@ -1,0 +1,91 @@
+Pitchfork Lines / Patterns
+
+Andrew Pitchfork
+    According to Alan H. Andrews, there is a high probability of the following:
+        Price will reach the latest median line
+        Price will either reverse on reaching the median line or gap through it
+        When prices pass through the median line, more often than not, prices pull back to the median line
+        When price reverses before reaching the median line, it is likely price will move in the opposite direction
+        Prices will reverse at any median line
+
+Modified Schiff Pitchfork 
+    50% lower / higher than first point ( Tail )
+
+
+Regular Schiff Pitchfork 
+    Tail starts from midpoint of Andrew Pitchfork 
+
+Draw Parallel Lines
+
+base line equation
+
+y = mx + b ( should have values )
+
+find parallel to base line
+which crosses at ( xx, yy)
+
+y1 = m1x1 + b 
+
+condition for ||
+m = m1 
+
+so 
+y1 = m1x1 + b 
+
+yy = m * xx + b 
+( find b )
+
+
+
+	# data = pd.DataFrame(data)
+
+	# ind = file_data.index
+
+	# data = data.set_index(ind)
+
+	# file_data['extreme'] = data[0]
+	
+	# data = file_data['extreme']
+
+	# # print(data.iloc[:,0])
+	# # print(file_data.head(5), data.head(5))
+	# # exit()
+
+
+22, 5
+
+26, 6
+
+34, 8
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
