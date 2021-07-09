@@ -1,0 +1,55 @@
+Trend
+	Sideway trend
+	Higher trend
+	Lower trend
+
+waves have peaks and troughs
+
+Trend based on local minima, local maxima
+
+Steps to find trend line ( not recommended )
+	1. Find Local minimas and maximas
+		a. Determine a period N
+
+	2. Draw lines between all minimax and maximas
+
+	3. Eleminate non-trendlines
+		a. Lines which break trend
+
+	4. Combine similar trend-lines
+		a. Based on A: The angle between them and
+		b. The points they touch
+
+	5. Rate each trendline by its strength
+		a. How many times did the price touch it
+		b. Determine D: How far away counts as Touch?
+
+	6. Eliminate weak lines
+
+
+Find minimas
+
+find line equation
+y = mx + b
+
+m = (y2 - y1) / (x2 - x1)
+
+b = y1 - (m * x1)
+
+to find 'b', consider any point of a line ( eg. take a know point of (x1, y1) or (x2, y2))
+
+
+# To find midpoint of a line
+mid_x = (x1 + x2) / 2
+mid_y = (y1 + y2) / 2
+
+
+
+
+
+
+
+
+
+
+
