@@ -14,7 +14,7 @@ if not mt5.initialize():
     quit()
  
 symbol = "AUDCAD"
-symbol = "EURUSD"
+# symbol = "EURUSD"
 # get open positions on USDCHF
 positions=mt5.positions_get(symbol=symbol)
 if positions==None:
@@ -26,7 +26,9 @@ elif len(positions)>0:
         print(position)
  
 # get the list of positions on symbols whose names contain "*USD*"
-symbol_positions=mt5.positions_get(group="*USD*")
+# symbol_positions=mt5.positions_get(group="*USD*")
+# symbol_positions=mt5.positions_get(group="*AUD*")
+symbol_positions=mt5.positions_get(symbol)
 if symbol_positions==None:
 	print("No positions with group=\"*AUD*\", error code={}".format(mt5.last_error()))
 elif len(symbol_positions)>0:
@@ -36,6 +38,8 @@ elif len(symbol_positions)>0:
 	df['time'] = pd.to_datetime(df['time'], unit='s')
 	df.drop(['time_update', 'time_msc', 'time_update_msc', 'external_id'], axis=1, inplace=True)
 	print(df)
+	print('Profit is : ' + str(df['profit']), (df['profit'] > 0))
+
  
 # shut down connection to the MetaTrader 5 terminal
 mt5.shutdown()

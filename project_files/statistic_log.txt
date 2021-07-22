@@ -1,0 +1,63 @@
+
+
+19-July-2021 Monday 08:40 am
+
+After implementing auto close all order in next minute 
+
+1 minute chart
+
+4 charts ( eurusd, usdjpy, euraud, audcad )
+
+-7.80  at [ 19-July-2021 Monday 08:40 am ]
+
+( choosed to let it run until 8:50 am and see what happens.. )
+( ofcourse cannot go wild with it because the spread is too low for all the charst in roboforex )
+
+( maybe should try it with 5 minute and 15 minute chart )
+( I am also thinking about changing the lot size and making it dynamic with respect the number of confident weight signals )
+
+
+
+-8.37 at [ 19-July-2021 Monday 08:50 am ]
+
+
+AFTER 10 MINUTES LOST ( 0.50 dollar )
+
+ISSUES:
+	1 minute chart candle covers less pips ( so the spread is taking higher commission amount for profit )
+
+	In a support / Resistace there may be an oscillation 
+
+After lossing many in 5 minute try 
+
+in 5 minutes we are losing about 2%
+
+
+
+1.7761 -> sl 
+
+TRYING TO Modifying Trailing Stop Loss
+Empty DataFrame
+Columns: []
+Index: []
+
+      ticket                time  type     magic  identifier  reason  volume  price_open       sl   tp  price_current  swap  profit  symbol           comment
+0  203984461 2021-07-21 06:45:08     0  12345678   203984461       3    0.01       0.929  0.92846  0.0        0.92886   0.0   -0.11  AUDCAD  python script op
+Traceback (most recent call last):
+  File "project_candle_line_oscillator.py", line 2489, in <module>
+    trade()
+  File "project_candle_line_oscillator.py", line 2344, in trade
+    takeTradeDecision()
+  File "project_candle_line_oscillator.py", line 2288, in takeTradeDecision
+    closePreviousTrades()
+  File "project_candle_line_oscillator.py", line 653, in closePreviousTrades
+    print(live_pos['ticket'] == position['positionValue'])
+TypeError: string indices must be integers
+
+
+
+
+
+
+
+

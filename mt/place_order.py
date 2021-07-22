@@ -42,12 +42,14 @@ request = {
     "action": mt5.TRADE_ACTION_DEAL,
     "symbol": symbol,
     "volume": lot,
-    "type": mt5.ORDER_TYPE_BUY,
+    "type": mt5.ORDER_TYPE_SELL,
     "price": price,
-    "sl": price - 100 * point,
-    "tp": price + 100 * point,
+    "sl": price + 1000 * point,
+    "tp": price - 1000 * point,
+    # "sl": 0,
+    # "tp": 0,
     "deviation": deviation,
-    "magic": 234000,
+    "magic": 12345678,
     "comment": "python script open",
     "type_time": mt5.ORDER_TIME_GTC,
     "type_filling": mt5.ORDER_FILLING_IOC,
@@ -62,6 +64,11 @@ print('...............')
  
 # send a trading request
 result = mt5.order_send(request)
+
+
+print(result)
+
+
 # check the execution result
 print("1. order_send(): by {} {} lots at {} with deviation={} points".format(symbol,lot,price,deviation))
 if result.retcode != mt5.TRADE_RETCODE_DONE:
