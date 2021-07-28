@@ -631,9 +631,33 @@ def closeTrade(ticket, positionType):
 		"comment": "python script close",
 		"type_time": mt5.ORDER_TIME_GTC,
 		"type_filling": mt5.ORDER_FILLING_IOC,
+	}
+
+
+	"""
+	# if opened position is SELL , price is bid and request Type is BUY
+	price=mt5.symbol_info_tick(selected_symbol).bid
+	requestType = mt5.ORDER_TYPE_BUY
+	if(positionType == 0): # if opened position is BUY , price is ask and request Type is SELL
+		price=mt5.symbol_info_tick(selected_symbol).ask
+		requestType = mt5.ORDER_TYPE_SELL
+
+	request={
+		"action": mt5.TRADE_ACTION_DEAL,
+		"symbol": selected_symbol,
+		"volume": lot,
+		"type": requestType,
+		"position": position_id,
+		"price": price,
+		"deviation": deviation,
+		"magic": magic,
+		"comment": "python script close",
+		"type_time": mt5.ORDER_TIME_GTC,
+		"type_filling": mt5.ORDER_FILLING_IOC,
 		# "type_time": mt5.ORDER_TIME_GTC,
     	# "type_filling": mt5.ORDER_FILLING_RETURN,
 	}
+	"""
 
 	# send a trading request
 	result=mt5.order_send(request)
