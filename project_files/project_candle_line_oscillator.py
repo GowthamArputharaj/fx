@@ -32,8 +32,8 @@ MT_password = "q14d6352C"
 MT_server = "RoboForex-ECN"
 
 symbol = 'EURUSD'
-# timeframe = mt5.TIMEFRAME_M1
-timeframe = mt5.TIMEFRAME_M2
+timeframe = mt5.TIMEFRAME_M1
+# timeframe = mt5.TIMEFRAME_M2
 # timeframe = mt5.TIMEFRAME_M3
 # timeframe = mt5.TIMEFRAME_M5
 # timeframe = mt5.TIMEFRAME_M15
@@ -599,6 +599,9 @@ def closeTrade(positionValue, positionType):
 
 	# send a trading request
 	result=mt5.order_send(request)
+
+	cprint(request, 'green', 'on_white')
+	cprint(result, 'magenta', 'on_white')
 
 	# check the execution result
 	print("3. close position #{}: sell {} {} lots at {} with deviation={} points".format(position_id,selected_symbol,lot,price,deviation))

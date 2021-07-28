@@ -57,6 +57,23 @@ TypeError: string indices must be integers
 
 
 
+ok open
+{'action': 1, 'symbol': 'EURUSD', 'volume': 0.01, 'type': 0, 'price': 1.1825700000000001, 'sl': 1.18234, 'tp': 0.0, 'deviation': 20, 'magic': 12345678, 'comment': 'python script open', 'type_time': 0, 'type_filling': 1}
+
+------------------------------------------------------
+
+{'action': 1, 'symbol': 'EURUSD', 'volume': 0.01, 'type': 1, 'price': 1.18253, 'sl': 1.18276, 'tp': 0.0, 'deviation': 20, 'magic': 12345678, 'comment': 'python script open', 'type_time': 0, 'type_filling': 1}
+
+------------------------------------------------------
+
+{'action': 1, 'symbol': 'EURUSD', 'volume': 0.01, 'type': 0, 'price': 1.18237, 'sl': 1.18216, 'tp': 0.0, 'deviation': 20, 'magic': 12345678, 'comment': 'python script open', 'type_time': 0, 'type_filling': 1}
+
+request
+{'action': 1, 'symbol': 'EURUSD', 'volume': 0.01, 'type': 1, 'position': 204652398, 'price': 1.18246, 'deviation': 20, 'magic': 12345678, 'comment': 'python script close', 'type_time': 0, 'type_filling': 1}
+
+result
+OrderSendResult(retcode=10009, deal=170045174, order=204652454, volume=0.01, price=1.18244, bid=1.18244, ask=1.18246, comment='Request executed', request_id=23, retcode_external=0, request=TradeRequest(action=1, magic=12345678, order=0, symbol='EURUSD', volume=0.01, price=1.18246, stoplimit=0.0, sl=0.0, tp=0.0, deviation=20, type=1, type_filling=1, type_time=0, expiration=0, comment='python script close', position=204652398, position_by=0)) magenta on_white
+
 
 
 
