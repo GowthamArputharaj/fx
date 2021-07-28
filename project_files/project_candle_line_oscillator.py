@@ -32,8 +32,8 @@ MT_password = "q14d6352C"
 MT_server = "RoboForex-ECN"
 
 symbol = 'EURUSD'
-# timeframe = mt5.TIMEFRAME_M1
-timeframe = mt5.TIMEFRAME_M2
+timeframe = mt5.TIMEFRAME_M1
+# timeframe = mt5.TIMEFRAME_M2
 # timeframe = mt5.TIMEFRAME_M3
 # timeframe = mt5.TIMEFRAME_M5
 # timeframe = mt5.TIMEFRAME_M15
@@ -44,11 +44,14 @@ timeframe = mt5.TIMEFRAME_M2
 # timeframe = mt5.TIMEFRAME_W1
 # timeframe = mt5.TIMEFRAME_MN1
 
-symbols = ['EURUSD', 'AUDCAD', 'USDJPY', 'EURAUD']
+# symbols = ['EURUSD', 'AUDCAD', 'USDJPY', 'EURAUD']
+# Low spread pairs
+# symbols = ['EURUSD', 'GBPUSD', 'USDJPY', 'USDCHF']
+symbols = ['EURUSD', 'GBPUSD', 'USDJPY', 'EURJPY']
 
 selected_symbol = 'EURUSD'
 
-lot = 0.01
+lot = float(0.01)
 
 deviation = 20
 
@@ -220,6 +223,13 @@ MAX_EXTREMES_FOR_THIRD_PITCHFORK = 3
 WILLIAM_R_COLOR = 'blue'
 RSI_COLOR = 'green'
 
+
+# Trade 
+MAX_LENGTH_FUTURE_CLOSE_POSITIONS = 25
+LINES_ACCEPTANCE_DEVIATION_PIPS = 0.0005
+
+
+
 # 7.500000000004725e-05
 # 0.00007500000000004725
 
@@ -265,6 +275,8 @@ all_candlestick_predictions = []
 ## Trade 
 all_last_candle_patterns = {}
 future_close_positions = []
+future_close_positions_log = []
+need_to_close_in_future_positions = []
 
 # Initial something
 data = []
@@ -292,22 +304,6 @@ def resetAllValues():
 	for variable in global_variables_to_reset:
 		globals()[variable] = []
 		# exec('del ' + variable)
-
-def getAllPositions():
-	global all_open_positions_from_market
-	
-	symbol = str(selected_symbol)
-	symbol_positions=mt5.positions_get(symbol=symbol)
-	print(symbol_positions, symbol)
-	if symbol_positions==None:
-		print("There are no Open Positions for Symbol: " + str(symbol))
-	elif len(symbol_positions)>0:
-		print("There are " + str(len(symbol_positions)) + " open positions in market")
-		df=pd.DataFrame(list(symbol_positions),columns=symbol_positions[0]._asdict().keys())
-		df['time'] = pd.to_datetime(df['time'], unit='s')
-		df.drop(['time_update', 'time_msc', 'time_update_msc', 'external_id'], axis=1, inplace=True)
-		all_open_positions_from_market = df
-
 
 def initializeMetaTrader():
 	if not mt5.initialize(login=MT_login, server=MT_server,password=MT_password):
@@ -442,6 +438,54 @@ def getChartData():
 	# print(function_initial_data.iloc[len(df)-1])
 	# exit()
 
+def getAllPositions():
+	global all_open_positions_from_market
+	
+	symbol = str(selected_symbol)
+	symbol_positions=mt5.positions_get(symbol=symbol)
+	print(symbol_positions, symbol)
+	if symbol_positions==None:
+		print("There are no Open Positions for Symbol: " + str(symbol))
+	elif len(symbol_positions)>0:
+		print("There are " + str(len(symbol_positions)) + " open positions in market")
+		df=pd.DataFrame(list(symbol_positions),columns=symbol_positions[0]._asdict().keys())
+		df['time'] = pd.to_datetime(df['time'], unit='s')
+		df.drop(['time_update', 'time_msc', 'time_update_msc', 'external_id'], axis=1, inplace=True)
+		all_open_positions_from_market = df
+
+def setNeedToCloseInFuturePositions():
+	global need_to_close_in_future_positions
+	global future_close_positions_log
+			
+	need_to_close_in_future_positions = []
+
+
+	for live_position_iter in range(len(all_open_positions_from_market)):
+		live_position = all_open_positions_from_market.iloc[live_position_iter]
+		live_position_ticket = live_position['ticket']
+		local_position_with_same_ticket = [loc_pos for loc_pos in future_close_positions_log if loc_pos['ticket'] == live_position['ticket']]
+
+		if(len(local_position_with_same_ticket) == 1):
+			local_position = local_position_with_same_ticket[0]
+			live_position_profit = live_position['profit']
+			# local_position = local_position.to_dict('series')
+			cprint(local_position, 'red', 'on_blue')
+			local_position['profit'] = live_position_profit
+			local_position['ticket'] = live_position_ticket
+			need_to_close_in_future_positions.append(local_position)
+
+		else:
+			if(len(local_position_with_same_ticket) == 0):
+				cprint('There is a Open position with Ticket ID: ' + str(live_position_ticket) + ' which is not recognised by Algo..', 'white', 'on_red')
+
+	if(len(future_close_positions_log) > MAX_LENGTH_FUTURE_CLOSE_POSITIONS):
+		# removes earliest future close position log history
+		future_close_positions_log = future_close_positions_log[(MAX_LENGTH_FUTURE_CLOSE_POSITIONS - future_close_positions):]
+
+	cprint('Theses positions Need to be closed in future', 'red', 'on_green')
+	print(need_to_close_in_future_positions)
+
+
 def getRequest(trade_type, stop_loss, take_profit, lot):
 
 	if not mt5.initialize(login=MT_login, server=MT_server,password=MT_password):
@@ -518,63 +562,55 @@ def getRequest(trade_type, stop_loss, take_profit, lot):
 	return request
 
 def openTrade(request):
-	global future_close_positions
+	global future_close_positions_log
 
 	# send a trading request
 	result = mt5.order_send(request)
 
 	# check the execution result
 	# print("1. order_send(): by {} {} lots at {} with deviation={} points".format(symbol,lot,price,deviation))
-	cprint("1. order_send()", 'white', 'on_green')
+	cprint("1. order_send() To Open New Position", 'white', 'on_green')
 	cprint(mt_error_codes[result.retcode], 'white', 'on_magenta')
 
-	if result.retcode != mt5.TRADE_RETCODE_DONE:
-		"""
-		print("2. order_send failed, retcode={}".format(result.retcode))
-		# request the result as a dictionary and display it element by element
-		result_dict=result._asdict()
-		for field in result_dict.keys():
-			print("   {}={}".format(field,result_dict[field]))
-			if this is a trading request structure, display it element by element as well
-			if field=="request":
-				traderequest_dict=result_dict[field]._asdict()
-				for tradereq_filed in traderequest_dict:
-					print("       traderequest: {}={}".format(tradereq_filed,traderequest_dict[tradereq_filed]))
-		"""
-		print("shutdown() and quit")
+	if(not result is None):
+		if result.retcode != mt5.TRADE_RETCODE_DONE:
+			cprint("shutdown() and quit Error happened while trying to open new position", 'white', 'on_red')
+		else:
+			timezone = pytz.timezone("Etc/GMT-3") # toggles according to season (NYSE) ( summer, winter )
+			now = datetime.now(timezone)
+			current_timestamp = datetime.timestamp(now)
+			close_timestamp = int(current_timestamp) + int(no_of_seconds_for_timestamp_candle[str(timeframe) + '_minute']) - 60
+			ticket = result.order
+
+			# print(request, request['type'])
+			positionType = request['type']
+
+			# hasTrailingStopLoss = False
+
+			new_future_close_positions = { 'timeToClose': close_timestamp, 'ticket': ticket, 'positionType': positionType, 'timeFrame': timeframe, 'hasTrailingStopLoss': hasTrailingStopLoss, 'symbol': selected_symbol }
+
+			cprint('new_future_close_positions is : ', 'white', 'on_magenta')
+			cprint(new_future_close_positions, 'white', 'on_magenta')
+
+			future_close_positions_log.append(new_future_close_positions)
+			if(PLOT_GRAPH_AFTER_OPEN_POSITION == True):
+				print('PLOTING GRAPH...')
+				selectGraph = ['lines', 'points', 'support_resistance', 'pitchfork']
+				plotCandleStickGraph(selectGraph)
 	else:
-		timezone = pytz.timezone("Etc/GMT-3") # toggles according to season (NYSE) ( summer, winter )
-		now = datetime.now(timezone)
-		current_timestamp = datetime.timestamp(now)
-		close_timestamp = int(current_timestamp) + int(no_of_seconds_for_timestamp_candle[str(timeframe) + '_minute'])
-		positionValue = result.order
-
-		# print(request, request['type'])
-		positionType = request['type']
-
-		# hasTrailingStopLoss = False
-
-		new_future_close_positions = { 'timeToClose': close_timestamp, 'positionValue': positionValue, 'positionType': positionType, 'timeFrame': timeframe, 'hasTrailingStopLoss': hasTrailingStopLoss, 'symbol': selected_symbol }
-
-		print('new_future_close_positions')
-		print(new_future_close_positions)
-
-		future_close_positions.append(new_future_close_positions)
-		if(PLOT_GRAPH_AFTER_OPEN_POSITION == True):
-			print('PLOTING GRAPH...')
-			selectGraph = ['lines', 'points', 'support_resistance', 'pitchfork']
-			plotCandleStickGraph(selectGraph)
-
+		cprint('Open Trade returedne NoneType object', 'white', 'on_red')
+		cprint(request, 'white', 'on_red')
+		
 
 	return True
 
-def closeTrade(positionValue, positionType):
-	global future_close_positions
+def closeTrade(ticket, positionType):
+	global future_close_positions_log
 
-	cprint(positionValue, 'red', 'on_yellow')
+	cprint(ticket, 'red', 'on_yellow')
 	
 	# create a close request
-	position_id = positionValue
+	position_id = ticket
 
 	# if opened position is SELL , price is bid and request Type is BUY
 	price=mt5.symbol_info_tick(selected_symbol).bid
@@ -595,100 +631,109 @@ def closeTrade(positionValue, positionType):
 		"comment": "python script close",
 		"type_time": mt5.ORDER_TIME_GTC,
 		"type_filling": mt5.ORDER_FILLING_IOC,
+		# "type_time": mt5.ORDER_TIME_GTC,
+    	# "type_filling": mt5.ORDER_FILLING_RETURN,
 	}
 
 	# send a trading request
 	result=mt5.order_send(request)
 
-	# check the execution result
-	print("3. close position #{}: sell {} {} lots at {} with deviation={} points".format(position_id,selected_symbol,lot,price,deviation))
-
-	cprint(mt_error_codes[result.retcode], 'white', 'on_magenta')
-
-
-	cprint('Removing position Value : ' + str(positionValue), 'white', 'on_magenta')
+	cprint(result, 'red', 'on_white')
 	
-	if result.retcode == mt5.TRADE_RETCODE_DONE:
-		# future_close_positions = future_close_positions.filter(lambda position: position.positionValue != positionValue)
-		future_close_positions = [position for position in future_close_positions if position['positionValue'] != positionValue]
+	# check the execution result
+	# print("3. close position #{}: sell {} {} lots at {} with deviation={} points".format(position_id,selected_symbol,lot,price,deviation))
 
-	if result.retcode != mt5.TRADE_RETCODE_DONE:
-		cprint("4. order_send failed", 'white', 'on_red')
-		print("   result",result)
+	if(not result is None):
+		cprint(mt_error_codes[result.retcode], 'green', 'on_magenta')
 
+
+		cprint('Trying to Close position Value : ' + str(ticket), 'green', 'on_magenta')
+		
+		# if result.retcode == mt5.TRADE_RETCODE_DONE:
+		# 	# future_close_positions = future_close_positions.filter(lambda position: position.ticket != ticket)
+		# 	future_close_positions = [position for position in future_close_positions if position['ticket'] != ticket]
+
+		if result.retcode != mt5.TRADE_RETCODE_DONE:
+			cprint("4. order_send failed Unable to Close position", 'green', 'on_red')
+			print("   result",result)
+
+		else:
+			print("4. position #{} closed, {}".format(position_id,result))
+			"""
+			# request the result as a dictionary and display it element by element
+			result_dict=result._asdict()
+			for field in result_dict.keys():
+				print("   {}={}".format(field,result_dict[field]))
+				# if this is a trading request structure, display it element by element as well
+				if field=="request":
+					traderequest_dict=result_dict[field]._asdict()
+					for tradereq_filed in traderequest_dict:
+						print("       traderequest: {}={}".format(tradereq_filed,traderequest_dict[tradereq_filed]))
+			"""
 	else:
-		print("4. position #{} closed, {}".format(position_id,result))
-		"""
-		# request the result as a dictionary and display it element by element
-		result_dict=result._asdict()
-		for field in result_dict.keys():
-			print("   {}={}".format(field,result_dict[field]))
-			# if this is a trading request structure, display it element by element as well
-			if field=="request":
-				traderequest_dict=result_dict[field]._asdict()
-				for tradereq_filed in traderequest_dict:
-					print("       traderequest: {}={}".format(tradereq_filed,traderequest_dict[tradereq_filed]))
-		"""
+		cprint('Close Trade returedne NoneType object', 'white', 'on_red')
+		cprint(request, 'white', 'on_red')
+
+
 
 def closePreviousTrades():
+
 	getAllPositions()
-	# print(future_close_positions)
+	setNeedToCloseInFuturePositions()
+
+
+	cprint('IT IS CLOSE PREVIOUS TRADE()', 'white', 'on_blue')
+	cprint(need_to_close_in_future_positions, 'white', 'on_blue')
+
+	# print(future_close_positions_log)
 
 	timezone = pytz.timezone("Etc/GMT-3") # toggles according to season (NYSE) ( summer, winter )
 	now = datetime.now(timezone)
 	current_timestamp = datetime.timestamp(now)
 
-	for position in future_close_positions:
+	for position in need_to_close_in_future_positions:
 		if(position['symbol'] == selected_symbol):
 			cprint(str(position['timeToClose']) + '    ' + str(current_timestamp + 1), 'white', 'on_red')
 			if(position['timeToClose'] <= (current_timestamp + 1)):
 				cprint('GOING TO CLOSE TRADE ', 'white', 'on_magenta')
 				cprint(position, 'white', 'on_magenta')
-				closeTrade(position['positionValue'], position['positionType'])
+				closeTrade(position['ticket'], position['positionType'])
 
 			if(position['hasTrailingStopLoss'] == True):
 				cprint('TRYING TO Modifying Trailing Stop Loss ' + str(selected_symbol), 'white', 'on_green')
-				print(all_open_positions_from_market)
 
-				# To update Trailing Stop Loss
-				for live_pos_iter in range(len(all_open_positions_from_market)):
-					live_pos_ticket = all_open_positions_from_market['ticket'].iloc[live_pos_iter]
-					live_pos_profit = all_open_positions_from_market['profit'].iloc[live_pos_iter]
-
-					if(live_pos_ticket == position['positionValue']):
-						if(live_pos_profit > 0):
-							if(position['timeFrame'] > mt5.TIMEFRAME_M1):
-								cprint('Modifying Trailing Stop Loss', 'white', 'on_green')
-								modifyTrailingStopLossTrade(position)
-						else:
-							cprint('There is a Open position which is in LOSS with Ticket ID: ' + str(live_pos_ticket), 'white', 'on_red')
-
-					else:
-						cprint('There is a Open position with Ticket ID: ' + str(live_pos_ticket) + ' which is not recognised by Algo..', 'white', 'on_red')
+				if(position['profit'] > 0):
+					if(position['timeFrame'] > mt5.TIMEFRAME_M1):
+						cprint('Modifying Trailing Stop Loss', 'white', 'on_green')
+						modifyTrailingStopLossTrade(position)
+				else:
+					cprint('There is a Open position which is in LOSS with Ticket ID: ' + str(position['ticket']), 'white', 'on_red')
 
 
-	cprint('REMAINING OPEN POSITIONS ARE :', 'red', 'on_yellow')
-	cprint(future_close_positions, 'red', 'on_yellow')
+	cprint('REMAINING OPEN POSITIONS ARE :', 'red', 'on_magenta')
+	cprint(need_to_close_in_future_positions, 'red', 'on_magenta')
 
 
 def modifyTrailingStopLossTrade(position):
-	global future_close_positions
 
 	# create a close request
-	position_id = position['positionValue']
-	positionValue = position['positionValue']
+	position_id = position['ticket']
+	ticket = position['ticket']
 	positionType = position['positionType']
 	
 	# if opened position is SELL , price is bid and request Type is BUY
 	price=mt5.symbol_info_tick(selected_symbol).bid
-	requestType = mt5.ORDER_TYPE_BUY
+	requestType = mt5.ORDER_TYPE_SELL
 	if(positionType == 0): # if opened position is BUY , price is ask and request Type is SELL
 		price=mt5.symbol_info_tick(selected_symbol).ask
-		requestType = mt5.ORDER_TYPE_SELL
+		requestType = mt5.ORDER_TYPE_BUY
 
 
 	take_profit = float(0)
-	take_profit = round(float(take_profit), 5)
+	if('JPY' in selected_symbol):
+		take_profit = round(float(take_profit), 3)
+	else:
+		take_profit = round(float(take_profit), 5)
 
 	symbol_pip = mt5.symbol_info(selected_symbol).point
 	
@@ -719,6 +764,25 @@ def modifyTrailingStopLossTrade(position):
 		stop_loss = price - stop_loss_pips
 
 
+	if('JPY' in selected_symbol):
+		stop_loss = round(float(stop_loss), 3)
+		take_profit = round(float(take_profit), 3)
+	else:
+		stop_loss = round(float(stop_loss), 5)
+		take_profit = round(float(take_profit), 5)
+
+	if(requestType == 0): # buy type order
+		if(stop_loss > price):
+			temp = stop_loss 
+			stop_loss = take_profit
+			take_profit = temp
+	else:
+		if(stop_loss < price):
+			temp = stop_loss 
+			stop_loss = take_profit
+			take_profit = temp
+
+
 	request={
 		# "action": mt5.TRADE_ACTION_DEAL,
 		# "action": mt5.TRADE_ACTION_MODIFY,
@@ -744,33 +808,20 @@ def modifyTrailingStopLossTrade(position):
 	result=mt5.order_send(request)
 
 	# check the execution result
-	print("3. close position #{}: sell {} {} lots at {} with deviation={} points".format(position_id,selected_symbol,lot,price,deviation))
+	print("3. modify position #{}: sell {} {} lots at {} with deviation={} points".format(position_id,selected_symbol,lot,price,deviation))
 
-	cprint(mt_error_codes[result.retcode], 'white', 'on_magenta')
+	if(not result is None):
+		cprint(mt_error_codes[result.retcode], 'white', 'on_magenta')
 
+		if result.retcode != mt5.TRADE_RETCODE_DONE:
+			cprint("4. order_send failed", 'white', 'on_red')
+			print("   result",result)
 
-	cprint('Removing position Value : ' + str(positionValue), 'white', 'on_magenta')
-	
-	# future_close_positions = future_close_positions.filter(lambda position: position.positionValue != positionValue)
-	future_close_positions = [position for position in future_close_positions if position['positionValue'] != positionValue]
-
-	if result.retcode != mt5.TRADE_RETCODE_DONE:
-		cprint("4. order_send failed", 'white', 'on_red')
-		print("   result",result)
-
+		else:
+			print("4. position #{} closed, {}".format(position_id,result))
 	else:
-		print("4. position #{} closed, {}".format(position_id,result))
-		"""
-		# request the result as a dictionary and display it element by element
-		result_dict=result._asdict()
-		for field in result_dict.keys():
-			print("   {}={}".format(field,result_dict[field]))
-			# if this is a trading request structure, display it element by element as well
-			if field=="request":
-				traderequest_dict=result_dict[field]._asdict()
-				for tradereq_filed in traderequest_dict:
-					print("       traderequest: {}={}".format(tradereq_filed,traderequest_dict[tradereq_filed]))
-		"""
+		cprint('Modify Trade returedne NoneType object', 'white', 'on_red')
+		cprint(request, 'white', 'on_red')
 
 
 
@@ -1747,7 +1798,7 @@ def findAllCandleStickPatternsAtLast():
 	n_minus_two_structure, n_minus_two_status, n_minus_two_upper_shadow, n_minus_two_candle_body, n_minus_two_lower_shadow = findSingleCandleStructure(data.iloc[i-2])
 	n_minus_three_structure, n_minus_three_status, n_minus_three_upper_shadow, n_minus_three_candle_body, n_minus_three_lower_shadow = findSingleCandleStructure(data.iloc[i-3])
 
-	print(n_status, n_structure)
+	# print(n_status, n_structure)
 	
 	last_I = 0
 	considerTweezer = True
@@ -2005,7 +2056,7 @@ def findExpectedProfitPointsAndWeight(last_candle_close, stat, ar_pts):
 	if(len(ar_pts) > 1):
 		if(stat == 'Bullish'):
 			for i in range(len(ar_pts)):
-				if(abs(ar_pts[i] - last_candle_close) < nearest_point):
+				if(abs(ar_pts[i] - last_candle_close) < LINES_ACCEPTANCE_DEVIATION_PIPS):
 					if((ar_pts[i] > last_candle_close)):
 						s_exp_profit_pts = last_candle_close - ar_pts[i-1]
 						sell_weight = sell_weight + 1
@@ -2013,7 +2064,7 @@ def findExpectedProfitPointsAndWeight(last_candle_close, stat, ar_pts):
 						break
 		if(stat == 'Bearish'):
 			for i in range(len(ar_pts)):
-				if(abs(ar_pts[i] - last_candle_close) < nearest_point):
+				if(abs(ar_pts[i] - last_candle_close) < LINES_ACCEPTANCE_DEVIATION_PIPS):
 					if((ar_pts[i] < last_candle_close)):
 						b_exp_profit_pts = ar_pts[i-1] - last_candle_close
 						# exp_profit_pts = last_candle_close - ar_pts[i-1]
@@ -2071,7 +2122,7 @@ def takeTradeDecision():
 
 	cprint(candle_sticks, 'red', 'on_white')
 
-	print(last_candle_bull_or_bear)
+	# print(last_candle_bull_or_bear)
 
 	# William R
 	if(william_r > 0.5):
@@ -2232,11 +2283,11 @@ def takeTradeDecision():
 		if(sell_weight < buy_weight):
 			trade_type = 'buy'
 
-		print(last_candle_close, last_candle_open, last_candle_close > last_candle_open)
-		print('============================================================================================================')
+		# print(last_candle_close, last_candle_open, last_candle_close > last_candle_open)
+		# print('============================================================================================================')
 
 		if(last_candle_close > last_candle_open): # last candle is Bullish
-			print('Last Candle Position is: ' + 'Bullish')
+			# print('Last Candle Position is: ' + 'Bullish')
 			if(trade_type == 'buy'):
 				# take_profit = last_candle_close + take_profit_points
 				stop_loss = last_candle_close - stop_loss_pips
@@ -2245,7 +2296,7 @@ def takeTradeDecision():
 				stop_loss = last_candle_close + stop_loss_pips
 
 		if(last_candle_close < last_candle_open): # last candle is Bearish
-			print('Last Candle Position is: ' + 'Bearish')
+			# print('Last Candle Position is: ' + 'Bearish')
 			if(trade_type == 'buy'):
 				# take_profit = last_candle_close + take_profit_points
 				stop_loss = last_candle_close - stop_loss_pips
@@ -2254,7 +2305,7 @@ def takeTradeDecision():
 				stop_loss = last_candle_close + stop_loss_pips
 
 		if(last_candle_close == last_candle_open): # last candle is Doji
-			print('Last Candle Position is: ' + 'Doji')
+			# print('Last Candle Position is: ' + 'Doji')
 			# take_profit_points = (last_candle_volume * ( 0.00001 * 10 ))
 			# stop_loss_points = take_profit_points / 2
 			
@@ -2265,7 +2316,7 @@ def takeTradeDecision():
 				# take_profit = last_candle_close - take_profit_points
 				stop_loss = last_candle_close + stop_loss_pips
 
-		print(stop_loss)
+		# print(stop_loss)
 
 		stop_loss = round(float(stop_loss), 5)
 		take_profit = float(0)
@@ -2279,13 +2330,13 @@ def takeTradeDecision():
 
 		if(request != False):
 			openTrade(request)
-			cprint('open Trade is happening', 'white', 'on_green')
+			cprint('open Trade is happened', 'white', 'on_green')
 		else:
 			cprint('Request is False', 'white', 'on_red')
 
 
-		print('last_candle_close, take_profit, stop_loss')
-		print(last_candle_close, take_profit, stop_loss)
+		# print('last_candle_close, take_profit, stop_loss')
+		# print(last_candle_close, take_profit, stop_loss)
 		# print(request)
 
 		# print('TRADE OPENED')
@@ -2374,7 +2425,7 @@ if __name__ == "__main__":
 	for symbol in symbols:
 		selected_symbol = symbol
 		getAllPositions()
-		print(all_open_positions_from_market)
+		cprint(all_open_positions_from_market, 'blue', 'on_white')
 
 
 	noOfSecondsShouldRun = 60 * 60 # one hour
@@ -2485,11 +2536,11 @@ if __name__ == "__main__":
 
 				print(current_minute)
 				if((timeframe == mt5.TIMEFRAME_M1) or (current_minute % 2 == 0) or (current_minute % 3 == 0) or (current_minute % 5 == 0)):
-					print(lastTimeCandleStickUsed, int(current_timestamp), now, (int(lastTimeCandleStickUsed) < ( 60 * 60 * 24 * 31 )))
+					# print(lastTimeCandleStickUsed, int(current_timestamp), now, (int(lastTimeCandleStickUsed) < ( 60 * 60 * 24 * 31 )))
 					# print('lastTimeCandleStickUsed')
 					if((int(lastTimeCandleStickUsed) < ( 60 * 60 * 24 * 31 )) or (int(lastTimeCandleStickUsed) >= int(current_timestamp))):
-						cprint('Trying to trade', 'white', 'on_green')
-						if(len(future_close_positions) > 0): # if any position is already opened / live
+						cprint('Can I trade', 'white', 'on_green')
+						if(len(future_close_positions_log) > 0): # if any position is already opened / live
 							for position in future_close_positions:
 								print(position, position['timeFrame'], position['timeToClose'])
 								if(not (position['timeFrame'] == timeframe and position['timeToClose'] > current_timestamp )):
