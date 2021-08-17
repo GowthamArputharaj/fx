@@ -1,0 +1,442 @@
+sell_weight = 2.5 | buy_weight = 0 | diff = 2.5
+
+
+~ sell_weight = 4.5 | buy_weight = 0 | diff = 4.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+NEUTRAL
+
+~ sell_weight = 4.5 | buy_weight = 0 | diff = 4.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+PROFIT
+
+~ sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Downtrend |
+PROFIT
+
+~ sell_weight = 4.5 | buy_weight = 1.5 | diff = 3.0
+ bullish Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+LOSS -21
+
+~ sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+PROFIT
+
+~ sell_weight = 1.5 | buy_weight = 4.5 | diff = 3.0
+ bearish UPtrend |
+NEUTRAL
+
+~ sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Downtrend |
+PROFIT
+
+~ sell_weight = 2.5 | buy_weight = 0 | diff = 2.5
+ Downtrend |
+PROFIT
+
+~ sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+LOSS -0.07
+
+~ sell_weight = 6.5 | buy_weight = 0 | diff = 6.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+LOSS: -0.33
+
+~ sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+PROFIT 
+
+~ sell_weight = 0 | buy_weight = 4.5 | diff = 4.5
+ UPtrend |
+PROFIT 
+
+~ sell_weight = 0 | buy_weight = 2.5 | diff = 2.5
+ UPtrend |
+LOSS -0.28
+
+~ sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Downtrend |
+PROFIT
+
+~ sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Downtrend |
+PROFIT
+
+~ sell_weight = 2.5 | buy_weight = 0 | diff = 2.5
+ Downtrend |
+PROFIT
+
+~ sell_weight = 0 | buy_weight = 4.5 | diff = 4.5
+ UPtrend |
+PROFIT
+__________________________________________________________________________________________
+
+~ sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+LOSS -0.09
+
+~ sell_weight = 4.5 | buy_weight = 0 | diff = 4.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+LOSS -0.14
+
+~ sell_weight = 0 | buy_weight = 6.5 | diff = 6.5
+ UPtrend |
+LOSS -0.29
+
+~ sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Downtrend |
+LOSS -0.14
+
+~ sell_weight = 6.5 | buy_weight = 0 | diff = 6.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+LOSS -0.18
+
+~ sell_weight = 2.5 | buy_weight = 0 | diff = 2.5
+ Downtrend |
+LOSS -0.21
+
+~ sell_weight = 0 | buy_weight = 2.5 | diff = 2.5
+ UPtrend |
+PROFIT 0.01
+
+~ sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Downtrend |
+LOSS -0.19
+
+~ sell_weight = 6.5 | buy_weight = 1.5 | diff = 5.0
+ bullish Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+LOSS -0.09
+
+~ sell_weight = 0 | buy_weight = 6.5 | diff = 6.5
+ UPtrend |
+LOSS -0.22
+
+~ sell_weight = 1.5 | buy_weight = 4.5 | diff = 3.0
+ bearish UPtrend |
+PROFIT 0.13
+__________________________________________________________________________________________
+
+
+~ sell_weight = 0 | buy_weight = 4.5 | diff = 4.5
+ UPtrend |
+NEUTRAL 
+
+~ sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+LOSS -0.14
+
+~ sell_weight = 0 | buy_weight = 4.5 | diff = 4.5
+ UPtrend |
+LOSS -0.16
+
+~ sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Downtrend |
+LOSS -0.04
+
+~ sell_weight = 4.5 | buy_weight = 0 | diff = 4.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+NEUTRAL
+
+~ sell_weight = 0 | buy_weight = 4.5 | diff = 4.5
+ UPtrend |
+PROFIT 0.03
+
+~ sell_weight = 0 | buy_weight = 4.5 | diff = 4.5
+ UPtrend |
+LOSS -0.16
+
+~ sell_weight = 4.5 | buy_weight = 0 | diff = 4.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+LOSS -0.01
+
+~ sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+LOSS -0.02
+
+__________________________________________________________________________________________
+
+sell_weight = 0 | buy_weight = 6.5 | diff = 6.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 6.5 | buy_weight = 1.5 | diff = 5.0
+ bullish Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 2.5 | buy_weight = 0 | diff = 2.5
+ Downtrend |
+sell_weight = 0.5 | buy_weight = 6 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 4.5 | buy_weight = 0 | diff = 4.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 0.5 | buy_weight = 6 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 6.5 | buy_weight = 0 | diff = 6.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 2.5 | buy_weight = 0 | diff = 2.5
+ Downtrend |
+sell_weight = 0.5 | buy_weight = 6 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 0 | buy_weight = 6.5 | diff = 6.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 4.5 | buy_weight = 1.5 | diff = 3.0
+ bullish Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 0 | buy_weight = 6.5 | diff = 6.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 2.5 | buy_weight = 0 | diff = 2.5
+ Downtrend |
+sell_weight = 0.5 | buy_weight = 6 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 2.5 | buy_weight = 0 | diff = 2.5
+ Downtrend |
+sell_weight = 0 | buy_weight = 2.5 | diff = 2.5
+ Pitchfork Line | UPtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 1.5 | buy_weight = 6.5 | diff = 5.0
+ bearish Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 0 | buy_weight = 2.5 | diff = 2.5
+ Pitchfork Line | UPtrend |
+sell_weight = 0 | buy_weight = 4.5 | diff = 4.5
+ Trend Line | Support Resistance Line | UPtrend |
+sell_weight = 0 | buy_weight = 6.5 | diff = 6.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 0 | buy_weight = 4.5 | diff = 4.5
+ Trend Line | Support Resistance Line | UPtrend |
+sell_weight = 6.5 | buy_weight = 0 | diff = 6.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 4.5 | buy_weight = 1.5 | diff = 3.0
+ bullish Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 4.5 | buy_weight = 0 | diff = 4.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 0 | buy_weight = 4.5 | diff = 4.5
+ Trend Line | Support Resistance Line | UPtrend |
+
+
+
+
+__________________________________________________________________________________________
+
+
+
+sell_weight = 0 | buy_weight = 4.5 | diff = 4.5
+ Trend Line | Support Resistance Line | UPtrend |
+sell_weight = 4.5 | buy_weight = 0 | diff = 4.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 0.5 | buy_weight = 6 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 0 | buy_weight = 4.5 | diff = 4.5
+ Trend Line | Support Resistance Line | UPtrend |
+sell_weight = 4.5 | buy_weight = 0 | diff = 4.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 4.5 | buy_weight = 1.5 | diff = 3.0
+ bullish Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 4.5 | buy_weight = 0 | diff = 4.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 0 | buy_weight = 6.5 | diff = 6.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 1.5 | buy_weight = 6.5 | diff = 5.0
+ bearish Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 1.5 | buy_weight = 6.5 | diff = 5.0
+ bearish Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 0 | buy_weight = 2.5 | diff = 2.5
+ Pitchfork Line | UPtrend |
+sell_weight = 0 | buy_weight = 4.5 | diff = 4.5
+ Trend Line | Support Resistance Line | UPtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 6.5 | buy_weight = 0 | diff = 6.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 4.5 | buy_weight = 1.5 | diff = 3.0
+ bullish Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 0 | buy_weight = 2.5 | diff = 2.5
+ Pitchfork Line | UPtrend |
+sell_weight = 0 | buy_weight = 2.5 | diff = 2.5
+ Pitchfork Line | UPtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 4.5 | buy_weight = 0 | diff = 4.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+
+
+
+__________________________________________________________________________________________
+
+sell_weight = 0 | buy_weight = 2.5 | diff = 2.5
+ Pitchfork Line | UPtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 0.5 | buy_weight = 6 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 1.5 | buy_weight = 6.5 | diff = 5.0
+ bearish Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 0.5 | buy_weight = 6 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 2.5 | buy_weight = 0 | diff = 2.5
+ Downtrend |
+sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 0 | buy_weight = 6.5 | diff = 6.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 0 | buy_weight = 4.5 | diff = 4.5
+ Trend Line | Support Resistance Line | UPtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 6.5 | buy_weight = 1.5 | diff = 5.0
+ bullish Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 1.5 | buy_weight = 4.5 | diff = 3.0
+ bearish Trend Line | Support Resistance Line | UPtrend |
+sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 6.5 | buy_weight = 1.5 | diff = 5.0
+ bullish Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 0 | buy_weight = 2.5 | diff = 2.5
+ Pitchfork Line | UPtrend |
+sell_weight = 6.5 | buy_weight = 0 | diff = 6.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 0.5 | buy_weight = 6 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 0 | buy_weight = 6.5 | diff = 6.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 6 | buy_weight = 0.5 | diff = 5.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 2.5 | buy_weight = 0 | diff = 2.5
+ Downtrend |
+sell_weight = 2.5 | buy_weight = 0 | diff = 2.5
+ Downtrend |
+sell_weight = 1.5 | buy_weight = 6.5 | diff = 5.0
+ bearish Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 0 | buy_weight = 2.5 | diff = 2.5
+ Pitchfork Line | UPtrend |
+sell_weight = 2.5 | buy_weight = 0 | diff = 2.5
+ Downtrend |
+sell_weight = 0 | buy_weight = 6.5 | diff = 6.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 4.5 | buy_weight = 1.5 | diff = 3.0
+ bullish Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 0 | buy_weight = 4.5 | diff = 4.5
+ Trend Line | Support Resistance Line | UPtrend |
+sell_weight = 0.5 | buy_weight = 3.0 | diff = 2.5
+ bullish bullish Downtrend |
+sell_weight = 0.5 | buy_weight = 4 | diff = 3.5
+ Trend Line | Support Resistance Line | Downtrend |
+sell_weight = 2.5 | buy_weight = 0 | diff = 2.5
+ Downtrend |
+sell_weight = 2.5 | buy_weight = 0 | diff = 2.5
+ Downtrend |
+sell_weight = 4.5 | buy_weight = 0 | diff = 4.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 4.5 | buy_weight = 0 | diff = 4.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+sell_weight = 4 | buy_weight = 0.5 | diff = 3.5
+ Trend Line | Pitchfork Line | Support Resistance Line | UPtrend |
+
+
+
+
+
+__________________________________________________________________________________________
+
+13-august 2021 08:45 AM
+
+sell_weight = 4.5 | buy_weight = 1.5 | diff = 3.0
+ bullish Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+
+
+
+
+
+
+
+
+sell_weight = 6.5 | buy_weight = 0 | diff = 6.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 6.5 | buy_weight = 0 | diff = 6.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 6.5 | buy_weight = 0 | diff = 6.5
+ Trend Line | Pitchfork Line | Support Resistance Line | Downtrend |
+sell_weight = 2.5 | buy_weight = 0 | diff = 2.5
+ Downtrend |
+sell_weight = 1.5 | buy_weight = 4.5 | diff = 3.0
+ bearish Trend Line | Support Resistance Line | UPtrend |
+sell_weight = 2.5 | buy_weight = 0 | diff = 2.5
+ Downtrend |
+sell_weight = 0 | buy_weight = 4.5 | diff = 4.5
+ Trend Line | Support Resistance Line | UPtrend |

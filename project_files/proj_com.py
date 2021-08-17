@@ -25,8 +25,6 @@ from termcolor import colored, cprint
 colorama.init()
 
 
-trade_log = open("trade_log.txt", "a")
-
 # Constants Area
 ## MetaTrader Credentials
 MT_login = 67021181
@@ -62,9 +60,10 @@ lot = 0.01
 
 deviation = 20
 
-magic = 12345678
+NO_OF_MODIFIED_TRADE = 0
+NO_OF_OPEN_TRADE = 0
 
-TRADE_WITH_TREND = True
+magic = 12345678
 
 # [1, 5, 15, 30, 16385, 16388, 16408, 32769, 49153]
 # [1, 5, 15, 30, 60, 240, 1440, 10080, 49153]
@@ -111,9 +110,8 @@ no_of_seconds_for_timestamp_candle = {
 
 stop_loss_take_profit = {
 	'1_minute': {
-		'stop_loss': 15,
-		'trailing_stop_loss': 15,
-		# 'trailing_stop_loss': 15,
+		'stop_loss': 20,
+		'trailing_stop_loss': 20,
 	},
 	'2_minute': {
 		'stop_loss': 40,
@@ -182,6 +180,7 @@ mt_error_codes = {
 
 # contains all live open positions in market
 all_open_positions_from_market = pd.DataFrame()
+all_open_positions_from_market = []
 
 # if hasTrailingStopLoss is True, the trailing stop loss position is updated
 hasTrailingStopLoss = True 
@@ -189,7 +188,7 @@ hasTrailingStopLoss = True
 PLOT_GRAPH_AFTER_OPEN_POSITION = False
 # PLOT_GRAPH_AFTER_OPEN_POSITION = True
 
-VOLATILITY_CHECK_VOLUME = float(0.0010)
+VOLATILITY_CHECK_VOLUME = float(0.00010)
 VOLATILITY_CHECK_VOLUME_JPY = float(0.010)
 MAXIMUM_CONSIDERABLE_DISTANCE_BETWEEN_LINE_AND_PRICE = float(0.0005)
 NUMBER_OF_PIPS_BETWEEN_NEXT_LINE_AND_LAST_CANDLE_CLOSE_PRICE = 10
@@ -345,29 +344,52 @@ def getAllPositions():
 			a_pos = list(pos)
 			a_pos = dict(zip(heading, a_pos))
 			open_positions_ticket.append(a_pos)
+			cprint(open_positions_ticket, 'white', 'on_red')
+			cprint(pos, 'red', 'on_blue')
+			cprint(a_pos, 'blue', 'on_red')
+
+		cprint(open_positions_tuple, 'white', 'on_magenta')
+
+		# if open_positions_tuple==None:
+		# 	print("There are no Open Positions for Symbol: ", end = "\r")
+		# elif len(open_positions_tuple)>0:
+		# 	print("There are " + str(len(open_positions_tuple)) + " open positions in market")
+		# 	df=pd.DataFrame(list(open_positions_tuple),columns=open_positions_tuple[0]._asdict().keys())
+		# 	# cprint(df, 'white', 'on_green')
+		# 	df['time'] = pd.to_datetime(df['time'], unit='s')
+		# 	# df.drop(['time_update', 'time_msc', 'time_update_msc', 'external_id'], axis=1, inplace=True)
+		# 	# cprint(all_open_positions_from_market, 'red', 'on_white')
+		# 	df_dict = df.to_dict()
+		# 	heading = list(df_dict)
+
+			# all_open_positions_from_market.extend(df_dict)
+			# # all_open_positions_from_market = df
+			# cprint(df, 'white', 'on_green')
+			# cprint(df_dict, 'white', 'on_blue')
+			# cprint(all_open_positions_from_market, 'white', 'on_magenta')
 
 
 	open_positions_ticket = list(open_positions_ticket)
 	all_open_positions_from_market = open_positions_ticket
 
-	# cprint(open_positions_ticket, 'white', 'on_magenta')
-	# cprint(len(open_positions_ticket), 'white', 'on_green')
-	# cprint(all_open_positions_from_market, 'white', 'on_red')
+	cprint(open_positions_ticket, 'green', 'on_white')
+	cprint(all_open_positions_from_market, 'blue', 'on_white')
+
+	cprint('______________________________________', 'green', 'on_red')
 
 	if(len(open_positions_ticket) > 0):
-		# print(open_positions)
+		cprint(open_positions_ticket, 'white', 'on_magenta')
+		cprint('open_positions_ticket', 'white', 'on_magenta')
+
+		# # print(open_positions)
 		all_open_positions = []
 
 		# remove non live / previous closed positions
 		for position in open_positions_ticket:
-			# cprint(position, 'green', 'on_red')
-			# cprint(position, 'green', 'on_white')
 			all_open_positions.append(position['ticket']) # getting ticket data from tuple data type
 
 		temp = []
 
-		# cprint(all_open_positions, 'green', 'on_white')
-		# cprint(all_open_positions, 'green', 'on_white')
 
 		for pos in future_close_positions:
 			if(pos['positionValue'] in all_open_positions):
@@ -378,17 +400,16 @@ def getAllPositions():
 		# future_close_positions = future_close_positions
 		future_close_positions = []
 
-	cprint('END OF GET ALL POSOITIONS -----------------', 'red', 'on_white')
-	
+	cprint(future_close_positions, 'white', 'on_magenta')
+	cprint('future_close_positions', 'white', 'on_magenta')
+
 
 
 def initializeMetaTrader():
 	if not mt5.initialize(login=MT_login, server=MT_server,password=MT_password):
-		print("initialize() failed, error code =",mt5.last_error())
+		# print("initialize() failed, error code =",mt5.last_error())
 		quit()
 	
-	cprint("MetaTrader5 package author: " + str(mt5.__author__), 'white', 'on_blue')
-	cprint("MetaTrader5 package version: " + str(mt5.__version__), 'white', 'on_blue')
 
 def getChartData():
 	global data, function_initial_data
@@ -422,11 +443,11 @@ def getChartData():
 	# for i in range(120):
 	# 	now = datetime.now(timezone)
 	# 	current_second = int(now.strftime("%S"))
-	# 	print(current_second)
+	# 	# print(current_second)
 	# 	time.sleep(1)
 	# exit()
 
-	# print(current_year, current_month, current_date, current_hour, current_minute )
+	# # print(current_year, current_month, current_date, current_hour, current_minute )
 
 	from_month = current_month 
 	from_year = current_year 
@@ -490,10 +511,10 @@ def getChartData():
 
 	# create DataFrame out of the obtained data
 	rates_frame = pd.DataFrame(rates)
-	# print(rates_frame, symbol, timeframe, utc_from, utc_to)
+	# # print(rates_frame, symbol, timeframe, utc_from, utc_to)
 	# exit()
 
-	# print(rates_frame)
+	# # print(rates_frame)
 
 	rates_frame['Datetime']=pd.to_datetime(rates_frame['time'], unit='s')
 	# rates_frame['Timestamp']=rates_frame['time']
@@ -513,22 +534,22 @@ def getChartData():
 
 	function_initial_data = pd.DataFrame(temp).tail(SCAN_LENGTH+EXTEND_LENGTH)
 	# df = pd.DataFrame(df)
-	# print(function_initial_data.tail(5))
-	# print(function_initial_data.head(5))
-	# print(function_initial_data.iloc[len(df)-1])
+	# # print(function_initial_data.tail(5))
+	# # print(function_initial_data.head(5))
+	# # print(function_initial_data.iloc[len(df)-1])
 	# exit()
 
 
 def getRequest(trade_type, stop_loss, take_profit, lot):
 
 	if not mt5.initialize(login=MT_login, server=MT_server,password=MT_password):
-		print("initialize() failed, error code =",mt5.last_error())
+		# print("initialize() failed, error code =",mt5.last_error())
 		return False
 
 	symbol_info = mt5.symbol_info(selected_symbol)
 
 	if symbol_info is None:
-		print(selected_symbol, "not found, can not call order_check()")
+		# print(selected_symbol, "not found, can not call order_check()")
 		mt5.shutdown()
 		return False
 
@@ -536,9 +557,9 @@ def getRequest(trade_type, stop_loss, take_profit, lot):
 	# if the symbol is unavailable in MarketWatch, add it
 	if symbol_info is not None:
 		if not symbol_info.visible:
-			print(selected_symbol, "is not visible, trying to switch on")
+			# print(selected_symbol, "is not visible, trying to switch on")
 			if not mt5.symbol_select(selected_symbol,True):
-				print("symbol_select({}}) failed, exit",selected_symbol)
+				# print("symbol_select({}}) failed, exit",selected_symbol)
 				mt5.shutdown()
 				return False
 
@@ -597,30 +618,31 @@ def getRequest(trade_type, stop_loss, take_profit, lot):
 def openTrade(request):
 	global future_close_positions
 	global future_close_positions_log
+	global NO_OF_OPEN_TRADE
 
 	# send a trading request
 	result = mt5.order_send(request)
 
 	# check the execution result
-	# print("1. order_send(): by {} {} lots at {} with deviation={} points".format(symbol,lot,price,deviation))
-	cprint("1. order_send()", 'white', 'on_green')
-	cprint(mt_error_codes[result.retcode], 'white', 'on_magenta')
+	# # print("1. order_send(): by {} {} lots at {} with deviation={} points".format(symbol,lot,price,deviation))
 
 	if result.retcode != mt5.TRADE_RETCODE_DONE:
 		"""
-		print("2. order_send failed, retcode={}".format(result.retcode))
+		# print("2. order_send failed, retcode={}".format(result.retcode))
 		# request the result as a dictionary and display it element by element
 		result_dict=result._asdict()
 		for field in result_dict.keys():
-			print("   {}={}".format(field,result_dict[field]))
+			# print("   {}={}".format(field,result_dict[field]))
 			if this is a trading request structure, display it element by element as well
 			if field=="request":
 				traderequest_dict=result_dict[field]._asdict()
 				for tradereq_filed in traderequest_dict:
-					print("       traderequest: {}={}".format(tradereq_filed,traderequest_dict[tradereq_filed]))
+					# print("       traderequest: {}={}".format(tradereq_filed,traderequest_dict[tradereq_filed]))
 		"""
-		print("shutdown() and quit")
+		# print("shutdown() and quit")
 	else:
+		NO_OF_OPEN_TRADE = NO_OF_OPEN_TRADE + 1
+
 		timezone = pytz.timezone("Etc/GMT-3") # toggles according to season (NYSE) ( summer, winter )
 		now = datetime.now(timezone)
 		current_timestamp = datetime.timestamp(now)
@@ -631,21 +653,21 @@ def openTrade(request):
 		
 		positionValue = result.order
 
-		# print(request, request['type'])
+		# # print(request, request['type'])
 		positionType = request['type']
 
 		# hasTrailingStopLoss = False
 
 		new_future_close_positions = { 'timeToClose': close_timestamp, 'positionValue': positionValue, 'positionType': positionType, 'timeFrame': timeframe, 'hasTrailingStopLoss': hasTrailingStopLoss, 'symbol': selected_symbol }
 
-		print('new_future_close_positions')
-		print(new_future_close_positions)
+		# print('new_future_close_positions')
+		# print(new_future_close_positions)
 
 		future_close_positions.append(new_future_close_positions)
 		future_close_positions_log.append(new_future_close_positions)
 
 		if(PLOT_GRAPH_AFTER_OPEN_POSITION == True):
-			print('PLOTING GRAPH...')
+			# print('PLOTING GRAPH...')
 			selectGraph = ['lines', 'points', 'support_resistance', 'pitchfork']
 			plotCandleStickGraph(selectGraph)
 
@@ -655,7 +677,6 @@ def openTrade(request):
 def closeTrade(positionValue, positionType):
 	global future_close_positions
 
-	cprint(positionValue, 'red', 'on_yellow')
 	
 	# create a close request
 	position_id = positionValue
@@ -684,41 +705,22 @@ def closeTrade(positionValue, positionType):
 	# send a trading request
 	result=mt5.order_send(request)
 
-	cprint(request, 'green', 'on_white')
-	cprint(result, 'magenta', 'on_white')
 
 	# check the execution result
-	print("3. close position #{}: sell {} {} lots at {} with deviation={} points".format(position_id,selected_symbol,lot,price,deviation))
-
-	cprint(mt_error_codes[result.retcode], 'white', 'on_magenta')
+	# print("3. close position #{}: sell {} {} lots at {} with deviation={} points".format(position_id,selected_symbol,lot,price,deviation))
 
 
-	cprint('Removing position Value : ' + str(positionValue), 'white', 'on_magenta')
+
 	
 	if result.retcode == mt5.TRADE_RETCODE_DONE:
 		# future_close_positions = future_close_positions.filter(lambda position: position.positionValue != positionValue)
 		future_close_positions = [position for position in future_close_positions if position['positionValue'] != positionValue]
 
-	if result.retcode != mt5.TRADE_RETCODE_DONE:
-		cprint("4. order_send failed", 'white', 'on_red')
-		print("   result",result)
 
-	else:
-		print("4. position #{} closed, {}".format(position_id,result))
-		"""
-		# request the result as a dictionary and display it element by element
-		result_dict=result._asdict()
-		for field in result_dict.keys():
-			print("   {}={}".format(field,result_dict[field]))
-			# if this is a trading request structure, display it element by element as well
-			if field=="request":
-				traderequest_dict=result_dict[field]._asdict()
-				for tradereq_filed in traderequest_dict:
-					print("       traderequest: {}={}".format(tradereq_filed,traderequest_dict[tradereq_filed]))
-		"""
 
 def modifyTrailingStopLossTrade(position, live_profit, previous_stop_loss):
 	global future_close_positions
+	global NO_OF_MODIFIED_TRADE
 
 	profit = live_profit
 
@@ -747,7 +749,7 @@ def modifyTrailingStopLossTrade(position, live_profit, previous_stop_loss):
 
 	if(timeframe == mt5.TIMEFRAME_M1):
 		stop_loss_pips = symbol_pip * stop_loss_take_profit['1_minute']['stop_loss']
-		trailing_stop_loss = stop_loss_take_profit['1_minute']['trailing_stop_loss']
+		# trailing_stop_loss = stop_loss_take_profit['1_minute']['trailing_stop_loss']
 	if(timeframe == mt5.TIMEFRAME_M2):
 		stop_loss_pips = symbol_pip * stop_loss_take_profit['2_minute']['stop_loss']
 		trailing_stop_loss_pips = symbol_pip * stop_loss_take_profit['2_minute']['trailing_stop_loss']
@@ -787,8 +789,7 @@ def modifyTrailingStopLossTrade(position, live_profit, previous_stop_loss):
 
 	profit_pips = profit * 100
 
-	# symbol_info_profit_point = abs(symbol_info_point * profit_pips)
-	symbol_info_profit_point = abs(symbol_info_point * trailing_stop_loss)
+	symbol_info_profit_point = abs(symbol_info_point * profit_pips)
 
 	if('JPY' in selected_symbol):
 		symbol_info_profit_point = round(symbol_info_profit_point, 3)
@@ -824,27 +825,13 @@ def modifyTrailingStopLossTrade(position, live_profit, previous_stop_loss):
 			modificationIsProfitable = True
 
 	if('JPY' in selected_symbol):
-		# cprint('has JPY 333333333333', 'blue', 'on_magenta')
 		stop_loss = round(stop_loss, 3)
 	else:
-		# cprint('DOES NOT HAS has JPY 5555555555', 'blue', 'on_magenta')
 		stop_loss = round(stop_loss, 5)
 
-	# cprint(modificationIsProfitable, 'blue', 'on_white')
-	# cprint('new_stop_loss', 'blue', 'on_magenta')
-	# cprint(new_stop_loss, 'blue', 'on_magenta')
-	# cprint('stop_loss', 'blue', 'on_red')
-	# cprint(stop_loss, 'blue', 'on_white')
-	# cprint('previous_stop_loss', 'blue', 'on_red')
-	# cprint(previous_stop_loss, 'blue', 'on_white')
-	# cprint('symbol_info_point * profit_pips', 'blue', 'on_red')
-	# cprint(symbol_info_point * profit_pips, 'blue', 'on_white')
-	# cprint('symbol_info_point', 'blue', 'on_red')
-	# cprint(symbol_info_point, 'blue', 'on_white')
-	# cprint('STOP LOSS ____________________________________', 'blue', 'on_white')
 
-	if(not modificationIsProfitable):
-		return False 
+	# if(not modificationIsProfitable):
+	# 	return False 
 	
 	request={
 		# "action": mt5.TRADE_ACTION_DEAL,
@@ -871,43 +858,41 @@ def modifyTrailingStopLossTrade(position, live_profit, previous_stop_loss):
 	result=mt5.order_send(request)
 
 	# check the execution result
-	# print("3. Modify position #{}: sell {} {} lots at {} with deviation={} points".format(position_id,selected_symbol,lot,price,deviation))
-
-	# cprint(mt_error_codes[result.retcode], 'white', 'on_magenta')
+	print("3. Modify position #{}: sell {} {} lots at {} with deviation={} points".format(position_id,selected_symbol,lot,price,deviation))
 
 
-	# cprint('Modifing position Value : ' + str(positionValue), 'white', 'on_magenta')
+
 	
 	# future_close_positions = future_close_positions.filter(lambda position: position.positionValue != positionValue)
 	# future_close_positions = [position for position in future_close_positions if position['positionValue'] != positionValue]
 
 	if result.retcode != mt5.TRADE_RETCODE_DONE:
-		cprint("4. order_send modification failed", 'white', 'on_red')
-		# print("   result",result)
+		print("   result",result)
 
 	else:
-		print("4. position #{} ,modified, {}".format(position_id,result))
+		NO_OF_MODIFIED_TRADE = NO_OF_MODIFIED_TRADE + 1
+
+		# print("4. position #{} closed, {}".format(position_id,result))
 		"""
 		# request the result as a dictionary and display it element by element
 		result_dict=result._asdict()
 		for field in result_dict.keys():
-			print("   {}={}".format(field,result_dict[field]))
+			# print("   {}={}".format(field,result_dict[field]))
 			# if this is a trading request structure, display it element by element as well
 			if field=="request":
 				traderequest_dict=result_dict[field]._asdict()
 				for tradereq_filed in traderequest_dict:
-					print("       traderequest: {}={}".format(tradereq_filed,traderequest_dict[tradereq_filed]))
+					# print("       traderequest: {}={}".format(tradereq_filed,traderequest_dict[tradereq_filed]))
 		"""
 
 
 def closePreviousTrades():
 	# getAllPositions()
 
-	# cprint(all_open_positions_from_market, 'white', 'on_red')
 	# if(len(all_open_positions_from_market) > 0):
 	# 	exit()
 	
-	# print(future_close_positions)
+	# # print(future_close_positions)
 
 	timezone = pytz.timezone("Etc/GMT-3") # toggles according to season (NYSE) ( summer, winter )
 	now = datetime.now(timezone)
@@ -915,43 +900,36 @@ def closePreviousTrades():
 
 	for position in future_close_positions:
 		if(position['symbol'] == selected_symbol):
-			cprint(str(position['timeToClose']) + '    ' + str(current_timestamp + 1), 'white', 'on_red')
 			if(position['timeToClose'] <= (current_timestamp + 1)):
-				cprint('GOING TO CLOSE TRADE ', 'white', 'on_magenta')
-				cprint(position, 'white', 'on_magenta')
 				closeTrade(position['positionValue'], position['positionType'])
 
 	# if(len(future_close_positions) > 0):
-	# 	cprint('REMAINING OPEN POSITIONS ARE :', 'red', 'on_yellow')
-	# 	cprint(future_close_positions, 'red', 'on_yellow')
 
 def modifyPreviousTrades():
 	getAllPositions()
 
-	# cprint(all_open_positions_from_market, 'white', 'on_red')
 	# if(len(all_open_positions_from_market) > 0):
 	# 	exit()
 	
-	# print(future_close_positions)
+	# # print(future_close_positions)
 
 	timezone = pytz.timezone("Etc/GMT-3") # toggles according to season (NYSE) ( summer, winter )
 	now = datetime.now(timezone)
 	current_timestamp = datetime.timestamp(now)
 
-	cprint(future_close_positions, 'white', 'on_red')
 	for position in future_close_positions:
 		if(position['symbol'] == selected_symbol):
-			# cprint(selected_symbol, 'white', 'on_red')
-			# cprint(str(position['timeToClose']) + '    ' + str(current_timestamp + 1), 'white', 'on_red')
 			
 			if(position['hasTrailingStopLoss'] == True):
-				cprint('TRYING TO Modifying Trailing Stop Loss ' + str(selected_symbol), 'white', 'on_green')
-				print(all_open_positions_from_market)
-				# print(len(all_open_positions_from_market))
-				# print(all_open_positions_from_market.iloc[0])
+				# print(all_open_positions_from_market)
+				# # print(len(all_open_positions_from_market))
+				# # print(all_open_positions_from_market.iloc[0])
 
 				# To update Trailing Stop Loss
 				for live_pos_iter in range(len(all_open_positions_from_market)):
+					# live_pos_ticket = all_open_positions_from_market['ticket'].iloc[live_pos_iter]
+					# live_pos_profit = all_open_positions_from_market['profit'].iloc[live_pos_iter]
+					# previous_stop_loss = all_open_positions_from_market['sl'].iloc[live_pos_iter]
 					live_pos_ticket = all_open_positions_from_market[live_pos_iter]['ticket']
 					live_pos_profit = all_open_positions_from_market[live_pos_iter]['profit']
 					previous_stop_loss = all_open_positions_from_market[live_pos_iter]['sl']
@@ -959,19 +937,7 @@ def modifyPreviousTrades():
 					if(live_pos_ticket == position['positionValue']):
 						if(live_pos_profit > 0 or True):
 							if(position['timeFrame'] > mt5.TIMEFRAME_M1 or True):
-								cprint('position["timeFrame"] > mt5.TIMEFRAME_M1', 'white', 'on_green')
-								cprint('Modifying Trailing Stop Loss', 'white', 'on_green')
 								modifyTrailingStopLossTrade(position, live_pos_profit, previous_stop_loss)
-						else:
-							cprint('There is a Open position which is in LOSS with Ticket ID: ' + str(live_pos_ticket), 'white', 'on_red')
-
-					else:
-						cprint('There is a Open position with Ticket ID: ' + str(live_pos_ticket) + ' which is not recognised by Algo..', 'white', 'on_red')
-
-	if(len(future_close_positions) > 0):
-		cprint('REMAINING OPEN POSITIONS ARE :', 'red', 'on_yellow')
-		cprint(future_close_positions, 'red', 'on_yellow')
-
 
 
 
@@ -1370,12 +1336,12 @@ def getPitchforkPoints():
 
 									if(kk > MAX_EXTREMES_FOR_SECOND_PITCHFORK):
 										break
-										print('')
-										print(desc_all_extremes_pitchfork[k], desc_all_extremes_pitchfork[j], desc_all_extremes_pitchfork[i])
+										# print('')
+										# print(desc_all_extremes_pitchfork[k], desc_all_extremes_pitchfork[j], desc_all_extremes_pitchfork[i])
 
 							if(jj > MAX_EXTREMES_FOR_THIRD_PITCHFORK):
 								break
-								print('')
+								# print('')
 
 
 				# Downward Pitchfork min-max-min point
@@ -1411,19 +1377,13 @@ def getPitchforkPoints():
 				
 									if(kk > MAX_EXTREMES_FOR_SECOND_PITCHFORK):
 										break
-										print('')
-										print(desc_all_extremes_pitchfork[k], desc_all_extremes_pitchfork[j], desc_all_extremes_pitchfork[i])
+										# print('')
+										# print(desc_all_extremes_pitchfork[k], desc_all_extremes_pitchfork[j], desc_all_extremes_pitchfork[i])
 
 		
 							if(jj > MAX_EXTREMES_FOR_THIRD_PITCHFORK):
 								break
-								print('')
-
-		else:
-			# continue
-			# break
-			print('No of Pitchfork has reached to Maximum ')
-
+								# print('')
 
 	temp = all_pitchfork_points
 	temp.sort()
@@ -1582,18 +1542,18 @@ def getWilliamROscillator():
 		william_percent_range = getWilliamRAtPointOscillator(i)
 		# william_r_oscillator.append(william_percent_range)
 		william_r_oscillator[i] = william_percent_range
-		# print(william_percent_range)
+		# # print(william_percent_range)
 
-	# print(len(william_r_oscillator))
-	# print(max(william_r_oscillator))
-	# print(min(william_r_oscillator))
+	# # print(len(william_r_oscillator))
+	# # print(max(william_r_oscillator))
+	# # print(min(william_r_oscillator))
 	return william_r_oscillator
 
 def sumOfIndividualForNCandles(rsi_range, x_point):
 	sum_data = function_initial_data['close'].iloc[x_point-rsi_range:x_point]
 
 	sum_data = list(sum_data)
-	# print('sumOfIndividualForNCandles is ')
+	# # print('sumOfIndividualForNCandles is ')
 	totalUps = float(1.00)
 	totalDowns = float(1.00)
 
@@ -1601,13 +1561,13 @@ def sumOfIndividualForNCandles(rsi_range, x_point):
 		last_close = sum_data[i-1]
 		current_close = sum_data[i]
 		if(current_close > last_close):
-			# print('current_close is GREATER THAN last_close')
+			# # print('current_close is GREATER THAN last_close')
 			totalUps = totalUps + ( current_close - last_close )
 		elif(last_close > current_close):
-			# print('current_close is LESSER THAN last_close')
+			# # print('current_close is LESSER THAN last_close')
 			totalDowns = totalDowns + ( last_close - current_close )
 	
-	# print(totalUps, totalDowns)
+	# # print(totalUps, totalDowns)
 	return totalUps, totalDowns
 
 def getRSIAtPointOscillator(x_point):
@@ -1632,11 +1592,11 @@ def getRSIOscillator():
 		rsi = rsi * 0.01
 		# rsi_oscillator.append(rsi)
 		rsi_oscillator[i] = rsi
-		# print(william_percent_range)
+		# # print(william_percent_range)
 
-	# print(len(rsi_oscillator))
-	# print(max(rsi_oscillator))
-	# print(min(rsi_oscillator))
+	# # print(len(rsi_oscillator))
+	# # print(max(rsi_oscillator))
+	# # print(min(rsi_oscillator))
 	return rsi_oscillator
 
 def getStochasticAtPointOscillator(x_point):
@@ -1662,11 +1622,11 @@ def getStochasticOscillator():
 		stochastic = getWilliamRAtPointOscillator(i)
 		# stochastic_oscillator.append(stochastic)
 		stochastic_oscillator[i] = stochastic
-		# print(william_percent_range)
+		# # print(william_percent_range)
 
-	# print(len(stochastic_oscillator))
-	# print(max(stochastic_oscillator))
-	# print(min(stochastic_oscillator))
+	# # print(len(stochastic_oscillator))
+	# # print(max(stochastic_oscillator))
+	# # print(min(stochastic_oscillator))
 	return stochastic_oscillator
 
 def getOBVAtPointOscillator(x_point):
@@ -1709,9 +1669,9 @@ def getOBVOscillator():
 	obv = np.concatenate((obv, obv_pad))
 	
 	obv_oscillator = obv
-	# print(obv, len(obv))
-	# print(obv[SCAN_LENGTH])
-	# print(obv[SCAN_LENGTH-1])
+	# # print(obv, len(obv))
+	# # print(obv[SCAN_LENGTH])
+	# # print(obv[SCAN_LENGTH-1])
 	# exit()
 	
 	return obv_oscillator
@@ -1799,7 +1759,7 @@ def plotCandleStickGraph(selectGraph):
 		line_plot = mpf.make_addplot(pd.DataFrame(oscillator_line_two, dtype="float"),panel=1, color='red')
 		addplots.append(line_plot)
 
-	# print(len(addplots), len(all_pitchfork_lines))
+	# # print(len(addplots), len(all_pitchfork_lines))
 	mpf.plot(function_initial_data, addplot=addplots, type='candle', style="yahoo",figscale=1.2, volume=True)
 
 def findTrend(data):
@@ -1857,7 +1817,7 @@ def findSingleCandleStructure(data):
 				patterns.append('star')
 
 
-	# print(candle_body, upper_shadow, lower_shadow, patterns, candle_status)
+	# # print(candle_body, upper_shadow, lower_shadow, patterns, candle_status)
 	return patterns, candle_status, upper_shadow, candle_body, lower_shadow
 
 ### At Point Values :-
@@ -1914,13 +1874,13 @@ def findAllCandleStickPatternsAtLast():
 	global all_candlestick_predictions
 	global all_last_candle_patterns
 
-	# print(function_initial_data.tail(4), len(function_initial_data), SCAN_LENGTH, EXTEND_LENGTH)
+	# # print(function_initial_data.tail(4), len(function_initial_data), SCAN_LENGTH, EXTEND_LENGTH)
 	# exit()
 	# df = function_initial_data.iloc[:SCAN_LENGTH+EXTEND_LENGTH]
 	# df = function_initial_data.tail(SCAN_LENGTH+EXTEND_LENGTH)
 	df = function_initial_data
 	# df = pd.DataFrame(df)
-	# print(df.tail(5))
+	# # print(df.tail(5))
 	# exit()
 
 	data = df
@@ -1951,7 +1911,7 @@ def findAllCandleStickPatternsAtLast():
 	n_minus_two_structure, n_minus_two_status, n_minus_two_upper_shadow, n_minus_two_candle_body, n_minus_two_lower_shadow = findSingleCandleStructure(data.iloc[i-2])
 	n_minus_three_structure, n_minus_three_status, n_minus_three_upper_shadow, n_minus_three_candle_body, n_minus_three_lower_shadow = findSingleCandleStructure(data.iloc[i-3])
 
-	print(n_status, n_structure)
+	# print(n_status, n_structure)
 	
 	last_I = 0
 	considerTweezer = True
@@ -1963,10 +1923,10 @@ def findAllCandleStickPatternsAtLast():
 	predictions = []
 
 
-	# print(str(i) + '/' + str(len(df)-50))
+	# # print(str(i) + '/' + str(len(df)-50))
 	if(len(n_structure) > 0):
-		# print('No of Patterns for this candle: ' + str(len(n_structure)))
-		# print(n_structure, last_candle_structure)
+		# # print('No of Patterns for this candle: ' + str(len(n_structure)))
+		# # print(n_structure, last_candle_structure)
 		for index in range(len(n_structure)):
 			plot = False
 			# predictions = []
@@ -2203,8 +2163,6 @@ def findExpectedProfitPointsAndWeight(last_candle_close, stat, ar_pts, weight):
 	buy_weight = 0
 	sell_weight = 0
 
-	cprint('weight', 'blue', 'on_white')
-	cprint(weight, 'blue', 'on_white')
 
 	symbol_pip = mt5.symbol_info(selected_symbol).point
 
@@ -2214,42 +2172,30 @@ def findExpectedProfitPointsAndWeight(last_candle_close, stat, ar_pts, weight):
 
 	if(len(ar_pts) > 1):
 		if(stat == 'Bullish'):
-			cprint('Bullish', 'blue', 'on_white')
 
 			for i in range(len(ar_pts)):
 
 				if(ar_pts[i] > last_candle_close):
-					cprint('YES ar_pts[i] > last_candle_close', 'blue', 'on_white')
 					if(abs(ar_pts[i] - last_candle_close) < nearest_point):
-						cprint('YES abs(ar_pts[i] - last_candle_close) < nearest_', 'blue', 'on_white')
 						exp_profit_pts = abs(last_candle_close - ar_pts[i-1])
-						cprint(exp_profit_pts, 'blue', 'on_white')
-						cprint(abs(last_candle_close - ar_pts[i-1]), 'blue', 'on_white')
 						if(exp_profit_pts >= (symbol_pip * NUMBER_OF_PIPS_BETWEEN_NEXT_LINE_AND_LAST_CANDLE_CLOSE_PRICE)):
 							sell_weight = sell_weight + weight
 							s_exp_profit_pts = exp_profit_pts
-							cprint('YES exp_profit_pts >= NUMBER_OF_PIPS_BETWEEN_NEXT_L', 'blue', 'on_white')
 
 						break
 
 		if(stat == 'Bearish'):
-			cprint('Bearish', 'blue', 'on_white')
 
 			for i in range(len(ar_pts)): # ar_pts is in Ascending order
 
 				if(len(ar_pts) > i+1):
 					if(ar_pts[i+1] > last_candle_close): # if next point is greater than last candle close
-						cprint('YES ar_pts[i+1] > last_candle_cl', 'blue', 'on_white')
 						if(ar_pts[i] < last_candle_close): # and current point is lesser thatn last candle close
-							cprint('YES ar_pts[i] < last_candle_cl', 'blue', 'on_white')
 							if(abs(ar_pts[i] - last_candle_close) < nearest_point): # current candle is in acceptable distance
-								cprint('YES abs(ar_pts[i] - last_candle_close) < neares', 'blue', 'on_white')
 								exp_profit_pts = abs(ar_pts[i+1] - last_candle_close)
-								cprint(exp_profit_pts, 'blue', 'on_white')
 								if(exp_profit_pts >= (symbol_pip * NUMBER_OF_PIPS_BETWEEN_NEXT_LINE_AND_LAST_CANDLE_CLOSE_PRICE)):
 									buy_weight = buy_weight + weight
 									b_exp_profit_pts = exp_profit_pts
-									cprint('YES', 'blue', 'on_white')
 
 								break
 
@@ -2258,10 +2204,6 @@ def findExpectedProfitPointsAndWeight(last_candle_close, stat, ar_pts, weight):
 
 def takeTradeDecision():
 	global selected_symbol
-	global trade_log
-	global TRADE_WITH_TREND
-
-	log = ''
 	
 	all = all_last_candle_patterns
 
@@ -2279,7 +2221,7 @@ def takeTradeDecision():
 
 	candle_sticks = all['candle_sticks']
 	# candle_sticks = {'bullish_inverted_hammer': 'bullish'}
-	# print(candle_sticks, all_last_candle_patterns)
+	# # print(candle_sticks, all_last_candle_patterns)
 
 	buy_weight = 0
 	sell_weight = 0
@@ -2301,34 +2243,23 @@ def takeTradeDecision():
 		val = candle_sticks[cdl_type]
 		if(val == 'bullish'):
 			buy_weight = buy_weight + candle_weight
-			log = log + ' ' + str(val)
 		if(val == 'bearish'):
 			sell_weight = sell_weight + candle_weight
-			log = log + ' ' + str(val)
-		cprint(val, 'red', 'on_white')
-		cprint(cdl_type, 'red', 'on_white')
 
-	cprint(candle_sticks, 'red', 'on_white')
 
 	# print(last_candle_bull_or_bear)
 
-	# # William R
-	# if(william_r > 0.5):
-	# 	sell_weight = sell_weight + 1
-	# 	log = log + ' william_r'
-	# elif(william_r < 0.5):
-	# 	buy_weight = buy_weight + 1
-	# 	log = log + ' william_r'
+	# William R
+	if(william_r > 0.5):
+		sell_weight = sell_weight + 1
+	elif(william_r < 0.5):
+		buy_weight = buy_weight + 1
 
-	# # RSI
-	# if(rsi > 0.5):
-	# 	sell_weight = sell_weight + 1
-	# 	log = log + ' rsi'
-
-	# elif(rsi < 0.5):
-	# 	buy_weight = buy_weight + 1
-	# 	log = log + ' rsi'
-
+	# RSI
+	if(rsi > 0.5):
+		sell_weight = sell_weight + 1
+	elif(rsi < 0.5):
+		buy_weight = buy_weight + 1
 
 	# # Stochastic
 	# if(stochastic > 0.5):
@@ -2342,24 +2273,18 @@ def takeTradeDecision():
 	b_exp_trend_pft_pts, s_exp_trend_pft_pts, trend_b_weight, trend_s_weight = findExpectedProfitPointsAndWeight(last_candle_close, last_candle_bull_or_bear, asc_trend_lines, TREND_LINE_WEIGHT)
 	buy_weight = buy_weight + trend_b_weight
 	sell_weight = sell_weight + trend_s_weight
-	if((trend_s_weight > 0) or (trend_b_weight > 0)):
-		log = log + ' Trend Line |'
 
 	# PitchFork Line
 	exp_pitch_pft_pts = 0
 	b_exp_pitch_pft_pts, s_exp_pitch_pft_pts, pitch_b_weight, pitch_s_weight = findExpectedProfitPointsAndWeight(last_candle_close, last_candle_bull_or_bear, asc_pitchfork_lines, PITCHFORK_LINE_WEIGHT)
 	buy_weight = buy_weight + pitch_b_weight
 	sell_weight = sell_weight + pitch_s_weight
-	if((trend_s_weight > 0) or (pitch_b_weight > 0)):
-		log = log + ' Pitchfork Line |'
-	
+
 	# Support Resistance Line
 	exp_sup_res_pft_pts = 0
 	b_exp_sup_res_pft_pts, s_exp_sup_res_pft_pts, sup_res_b_weight, sup_res_s_weight = findExpectedProfitPointsAndWeight(last_candle_close, last_candle_bull_or_bear, asc_trend_lines, SUPPORT_RESISTANCE_WEIGHT)
 	buy_weight = buy_weight + sup_res_b_weight
 	sell_weight = sell_weight + sup_res_s_weight
-	if((trend_s_weight > 0) or (sup_res_b_weight > 0)):
-		log = log + ' Support Resistance Line |'
 
 	# CandleStick Pattern
 
@@ -2371,43 +2296,25 @@ def takeTradeDecision():
 	s_avg_expected_pft = sum([s_exp_trend_pft_pts, s_exp_pitch_pft_pts, s_exp_sup_res_pft_pts]) / 3
 	
 
-	# print(b_total_expected_pft, s_total_expected_pft, b_avg_expected_pft, s_avg_expected_pft)
-	# print(buy_weight, sell_weight)
+	# # print(b_total_expected_pft, s_total_expected_pft, b_avg_expected_pft, s_avg_expected_pft)
+	# # print(buy_weight, sell_weight)
 	# exit()
 
-	# print(buy_weight, sell_weight, exp_trend_pft_pts, exp_pitch_pft_pts, exp_sup_res_pft_pts)
-	# print(sum([exp_trend_pft_pts, exp_pitch_pft_pts, exp_sup_res_pft_pts])/3, total_expected_pft)
+	# # print(buy_weight, sell_weight, exp_trend_pft_pts, exp_pitch_pft_pts, exp_sup_res_pft_pts)
+	# # print(sum([exp_trend_pft_pts, exp_pitch_pft_pts, exp_sup_res_pft_pts])/3, total_expected_pft)
 
 	if(found_trend == 'uptrend'):
 		buy_weight = buy_weight + 0.5
-		log = log + ' UPtrend |'
 
 	if(found_trend == 'downtrend'):
 		sell_weight = sell_weight + 0.5
-		log = log + ' Downtrend |'
 
 	# signal_strength = 1
 	signal_strength = 1.5
 	# sell_weight = 9
 	# gowtham
 	# if(sell_weight != buy_weight):
-
-	TRADE_WITH_TREND_STATUS = False
-
-	if(TRADE_WITH_TREND == True):
-		if((found_trend == 'uptrend') and (buy_weight > sell_weight)):
-			TRADE_WITH_TREND_STATUS = True 
-		if((found_trend == 'downtrend') and (sell_weight > buy_weight)):
-			TRADE_WITH_TREND_STATUS = True 
-
-
-	if(abs(sell_weight - buy_weight) > signal_strength and (TRADE_WITH_TREND and TRADE_WITH_TREND_STATUS)):
-
-		trade_log = open('trade_log.txt', 'a')
-		trade_log.write("sell_weight = " + str(sell_weight) + " | buy_weight = " + str(buy_weight) + " | diff = " + str(abs(sell_weight - buy_weight)) + "\n")
-		trade_log.write(log + "\n")
-		trade_log.close()
-
+	if(abs(sell_weight - buy_weight) > signal_strength):
 		trade_type = ''
 		lot = 0.01
 		stop_loss = ''
@@ -2445,11 +2352,11 @@ def takeTradeDecision():
 		if(sell_weight < buy_weight):
 			trade_type = 'buy'
 
-		print(last_candle_close, last_candle_open, last_candle_close > last_candle_open)
-		print('============================================================================================================')
+		# print(last_candle_close, last_candle_open, last_candle_close > last_candle_open)
+		# print('============================================================================================================')
 
 		if(last_candle_close > last_candle_open): # last candle is Bullish
-			print('Last Candle Position is: ' + 'Bullish')
+			# print('Last Candle Position is: ' + 'Bullish')
 			if(trade_type == 'buy'):
 				# take_profit = last_candle_close + take_profit_points
 				stop_loss = last_candle_close - stop_loss_pips
@@ -2458,7 +2365,7 @@ def takeTradeDecision():
 				stop_loss = last_candle_close + stop_loss_pips
 
 		if(last_candle_close < last_candle_open): # last candle is Bearish
-			print('Last Candle Position is: ' + 'Bearish')
+			# print('Last Candle Position is: ' + 'Bearish')
 			if(trade_type == 'buy'):
 				# take_profit = last_candle_close + take_profit_points
 				stop_loss = last_candle_close - stop_loss_pips
@@ -2467,7 +2374,7 @@ def takeTradeDecision():
 				stop_loss = last_candle_close + stop_loss_pips
 
 		if(last_candle_close == last_candle_open): # last candle is Doji
-			print('Last Candle Position is: ' + 'Doji')
+			# print('Last Candle Position is: ' + 'Doji')
 			# take_profit_points = (last_candle_volume * ( 0.00001 * 10 ))
 			# stop_loss_points = take_profit_points / 2
 			
@@ -2478,8 +2385,6 @@ def takeTradeDecision():
 				# take_profit = last_candle_close - take_profit_points
 				stop_loss = last_candle_close + stop_loss_pips
 
-		cprint('stop_loss', 'white', 'on_red')
-		cprint(stop_loss, 'white', 'on_red')
 
 		stop_loss = round(float(stop_loss), 5)
 		take_profit = float(0)
@@ -2487,39 +2392,29 @@ def takeTradeDecision():
 
 		request = getRequest(trade_type, stop_loss, take_profit, lot)
 
-		cprint('request is ' , 'white', 'on_magenta')
-		cprint(request , 'white', 'on_magenta')
 
 
 		if(request != False):
-			# trade_log = open('trade_log.txt', 'a')
-			# trade_log.write(request)
-			# trade_log.close()
 			openTrade(request)
-			cprint('open Trade is happening', 'white', 'on_green')
-		else:
-			cprint('Request is False', 'white', 'on_red')
 
 
-		print('last_candle_close, take_profit, stop_loss')
-		print(last_candle_close, take_profit, stop_loss)
-		# print(request)
 
-		# print('TRADE OPENED')
-		# print(trade_type, stop_loss, take_profit, lot)
-	else:
-		print(sell_weight, buy_weight)
-		cprint('NOT OPENED', 'white', 'on_red')
+		# print('last_candle_close, take_profit, stop_loss')
+		# print(last_candle_close, take_profit, stop_loss)
+		# # print(request)
+
+		# # print('TRADE OPENED')
+
 
 	# closePreviousTrades()
 
 	# exit()
 
-	# print(all)
-	# print(all['trend_lines'])
-	# print(all['support_resistance_lines'])
-	# print(all['pitchfork_lines'])
-	# print(all['oscillators'])
+	# # print(all)
+	# # print(all['trend_lines'])
+	# # print(all['support_resistance_lines'])
+	# # print(all['pitchfork_lines'])
+	# # print(all['oscillators'])
 
 	# exit()
 
@@ -2551,13 +2446,13 @@ def getAllAtPointValue():
 	findAllCandleStickPatternsAtLast() 
 
 
-	# print(all_last_candle_patterns)
+	# # print(all_last_candle_patterns)
 
 def isChartDataVolatile():
 	last_n_cdle = function_initial_data[-5:]
 	total_volume = float(0)
 	
-	# print(last_n_cdle)
+	# # print(last_n_cdle)
 
 	for i in range(len(last_n_cdle)):
 		cdle = last_n_cdle.iloc[i]
@@ -2566,8 +2461,6 @@ def isChartDataVolatile():
 
 	avg_volume = total_volume / len(last_n_cdle)
 
-	# cprint('avg_volumen', 'white', 'on_blue')
-	# cprint(avg_volume, 'white', 'on_blue')
 
 	if(selected_symbol.find('JPY') == -1):
 		if(avg_volume > VOLATILITY_CHECK_VOLUME_JPY):
@@ -2589,7 +2482,6 @@ def trade():
 	getChartDataStatus = getChartData()
 
 	if(not (isChartDataVolatile() or DontConsiderIsChartDataVolatile)):
-		cprint('isChartDataVolatile is False', 'blue', 'on_red')
 		return False 
 	
 	# if(getChartDataStatus != True):
@@ -2607,12 +2499,12 @@ def trade():
 
 	# closePreviousTrades()
 
-		# print('starting time')
+		# # print('starting time')
 		# DATA_STARTING_POINT = 200
-		# print('started')
+		# # print('started')
 
 		# getAllAtPointValue()
-		# print('ending time is : ')
+		# # print('ending time is : ')
 		# exit()
 
 
@@ -2623,14 +2515,13 @@ if __name__ == "__main__":
 	for symbol in symbols:
 		selected_symbol = symbol
 		# getAllPositions()
-		print(all_open_positions_from_market)
+		# print(all_open_positions_from_market)
 
 
-	# noOfSecondsShouldRun = 60 * 60 # one hour
-	noOfSecondsShouldRun = 60 * 30 # half an hour
+	# noOfSecondsShouldRun = 60 * 30 # half an hour
+	noOfSecondsShouldRun = 60 * 60 # one hour
 
 	noOfSecondsRan = 0
-
 
 	while noOfSecondsRan <= noOfSecondsShouldRun:
 		noOfSecondsRan = noOfSecondsRan + 1
@@ -2652,20 +2543,14 @@ if __name__ == "__main__":
 				selected_symbol = symbol
 				closePreviousTrades()
 
-			cprint('REMAINING OPEN POSITIONS ARE :', 'red', 'on_yellow')
-			cprint(future_close_positions, 'red', 'on_yellow')
 
-		# cprint(future_close_positions, 'white', 'on_blue')
-		# cprint(all_open_positions_from_market, 'white', 'on_green')
 
-		if(int(current_second) % 3 == 0):
+		if(int(current_second) % 10 == 0):
 			getAllPositions()
 
 			if(len(future_close_positions) > 0):
-				# cprint(int(current_second), 'white', 'on_red')
 				# if(int(current_second) % 5 == 0):
 				for symbol in symbols:
-					cprint(symbol, 'white', 'on_red')
 					selected_symbol = symbol
 					modifyPreviousTrades()
 
@@ -2674,28 +2559,22 @@ if __name__ == "__main__":
 		timestamp = datetime.timestamp(now)
 		timestamp = int(timestamp)
 
-		# cprint("Seconds: " + str(current_second), 'white', 'on_blue', end = "\r")
-		cprint("Seconds: " + str(current_second) + '   and Timestamp: ' + str(timestamp), 'white', 'on_blue', end = "\r")
+		cprint("Seconds: " + str(current_second) + "\t No Of Modified Trade: " + str(NO_OF_MODIFIED_TRADE) + "\t No Of Open Trade: " + str(NO_OF_OPEN_TRADE), 'white', 'on_blue', end = "\r")
 
 		if(int(current_second) == 5):
 			for symbol in symbols:
 				selected_symbol = symbol
 
-				cprint('Symbol is : ' + str(selected_symbol), 'white', 'on_magenta')
 
 				lastTimeCandleStickUsed = 0
 
 				if(timeframe == mt5.TIMEFRAME_M1):
 					if(selected_symbol in last_candle_until_last_time['1_minute']):
 						lastTimeCandleStickUsed = int(last_candle_until_last_time['1_minute'][selected_symbol]) + ( 60 * 1 )
-						cprint('heo worldd', 'white', 'on_blue')
-						cprint(last_candle_until_last_time, 'white', 'on_blue')
 						# exit()
 					else:
 						last_candle_until_last_time['1_minute'][selected_symbol] = 0
 						lastTimeCandleStickUsed = int(last_candle_until_last_time['1_minute'][selected_symbol]) + ( 60 * 1 )
-						# cprint('heo worldd alsdjf skdfljajf ksj dfkls djfas dkfjlaskd f', 'white', 'on_blue')
-						# cprint(last_candle_until_last_time, 'white', 'on_blue')
 
 				if(current_minute % 2 == 0):
 					if(timeframe == mt5.TIMEFRAME_M2):
@@ -2764,12 +2643,11 @@ if __name__ == "__main__":
 						
 						lastTimeCandleStickUsed = last_candle_until_last_time['49153_minute'] + ( 60 * 60 * 24 * noOfDaysInLastMonth )
 
-				print(current_minute)
+				# print(current_minute)
 				if((timeframe == mt5.TIMEFRAME_M1) or (current_minute % 2 == 0) or (current_minute % 3 == 0) or (current_minute % 5 == 0)):
-					# print(lastTimeCandleStickUsed, int(current_timestamp), now, (int(lastTimeCandleStickUsed) < ( 60 * 60 * 24 * 31 )))
-					# print('lastTimeCandleStickUsed')
+					# # print(lastTimeCandleStickUsed, int(current_timestamp), now, (int(lastTimeCandleStickUsed) < ( 60 * 60 * 24 * 31 )))
+					# # print('lastTimeCandleStickUsed')
 					if((timeframe == mt5.TIMEFRAME_M1) or (int(lastTimeCandleStickUsed) < ( 60 * 60 * 24 * 31 )) or (int(lastTimeCandleStickUsed) >= int(current_timestamp))):
-						cprint('Trying to trade', 'white', 'on_green')
 						if(len(future_close_positions) > 0): # if any position is already opened / live
 							tradedOneSelectedSymbolForOneTime = False
 							for position in future_close_positions:
@@ -2777,7 +2655,7 @@ if __name__ == "__main__":
 									break
 
 								if(position['symbol'] == selected_symbol):
-									print(position, position['timeFrame'], position['timeToClose'])
+									# print(position, position['timeFrame'], position['timeToClose'])
 									if(not (position['timeFrame'] == timeframe and position['timeToClose'] >= current_timestamp )):
 										trade()
 										tradedOneSelectedSymbolForOneTime = True
@@ -2785,15 +2663,11 @@ if __name__ == "__main__":
 						else: # if there are no opened / live position
 							trade()
 
-						# time.sleep(1)
-					else:
-						cprint('This candlestick is already analysed / used for symbol ' + str(selected_symbol), 'white', 'on_red')
-						# time.sleep(1)
 
-				print('--------------------------------------------------')
+				# print('--------------------------------------------------')
 
 		# else:
-			# print('Going to sleep for a second')
+			# # print('Going to sleep for a second')
 			# time.sleep(1)
 		
 		time.sleep(1)
